@@ -1,0 +1,27 @@
+<html>
+<head>
+<title>UB Dashboard</title>
+<script src="jquery.min.js"></script>
+
+<script>
+$(document).ready(function(){
+  $("button").click(function(){
+    $.post("http://localhost/backend",
+    {
+      data:"all",
+
+    },
+    function(data,status){
+
+      $("#data").html(data);
+    });
+  });
+});
+</script>
+</head>
+<body>
+
+<button>Send an HTTP POST request to a page and get the result back</button>
+<p id="data"> Data here</p>
+</body>
+</html>
