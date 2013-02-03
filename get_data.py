@@ -1,9 +1,10 @@
-
+import dbConfig
 import pymongo
 
 def get_data(data_requested):
     connection=pymongo.MongoClient()
     db=connection.openmrs_aggregation
+    db.authenticate(dbConfig.mongo_username,dbConfig.mongo_password)
     collection=db.aggregate
     data={}
     for entry in collection.find():

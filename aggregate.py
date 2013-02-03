@@ -274,6 +274,7 @@ print "Finished Calculating"
 
 connection=pymongo.MongoClient()
 db=connection.openmrs_aggregation
+db.authenticate(mongo_username,mongo_password)
 collection=db.aggregate
 print aggregate
 latest_date=datetime.datetime(1970,12,12)

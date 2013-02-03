@@ -2,3 +2,5 @@ host="localhost"
 login='username'
 password="password"
 database='database_name'
+mongo_username="username"
+mongo_password="password"
