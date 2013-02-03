@@ -71,6 +71,7 @@ $(document).ready(function(){
       $("#follow_up").html(table(jdata[Object.keys(jdata)]["reason_to_follow_up"],true));
       $("#followed_up").html(table(jdata[Object.keys(jdata)]["followed_up"],false));      
       $("#willing_to_return").html(table(jdata[Object.keys(jdata)]["willing_to_return"],false));
+      $("#missing_data").html(table(jdata[Object.keys(jdata)]["missing"],true));
 
     });
   
@@ -182,6 +183,19 @@ $(document).ready(function(){
       <div id="collapseEight" class="accordion-body collapse">
 	<div class="accordion-inner">
 	  <div id="willing_to_return" class="span6">
+	  </div>
+	</div>
+      </div>
+    </div>
+    <div class="accordion-group">
+      <div class="accordion-heading">
+	<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseNine">
+          Missing Data
+	</a>
+      </div>
+      <div id="collapseNine" class="accordion-body collapse">
+	<div class="accordion-inner">
+	  <div id="missing_data" class="span6">
 	  </div>
 	</div>
       </div>

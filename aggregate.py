@@ -55,7 +55,7 @@ which={"who_stage_f":"first","who_stage_l":"last","patient_source":"first","reas
 # Multiple numeric
 multiple_numeric={"cd4_count":5497}
 #Boolean
-boolean_sql={"eligible_for_art":"select patient_id from patient where patient_id in (select distinct(person_id) from obs where concept_id=5356 and (value_coded=1206 or value_coded=1207) and voided=0) or patient_id in (select distinct(person_id) from obs where concept_id=5497 and value_numeric<350 and voided=0)","on_art":"select patient_id from (select start_date,patient_id from orders where discontinued=0 and voided=0 group by start_date,patient_id ) as s order by start_date","followed_up":"select patient_id from encounter where form_id=4 and voided=0"}
+boolean_sql={"eligible_for_art":"select patient_id from patient where patient_id in (select distinct(person_id) from obs where concept_id=5356 and (value_coded=1206 or value_coded=1207) and voided=0) or patient_id in (select distinct(person_id) from obs where concept_id=5497 and value_numeric<350 and voided=0)","hiv_positive_date":"select distinct(person_id) as patient_id from obs where obs.concept_id=6259","art_eligible_date":"select distinct(person_id) as patient_id from obs where obs.concept_id=6260","on_art":"select patient_id from (select start_date,patient_id from orders where discontinued=0 and voided=0 group by start_date,patient_id ) as s order by start_date","followed_up":"select patient_id from encounter where form_id=4 and voided=0"}
 
 
 # Get all patient ids and other needed fields from the patient table
@@ -207,7 +207,7 @@ print "Finished getting data. ",len(data.keys())
 # Calculate Aggregates:
 
 age_limit=14
-aggregate={"enrolled":{},"patient_source":{},"eligible_no_art":{},"willing_to_return":{},"on_art_who":{},"inactive_reason":{},"reason_to_follow_up":{},"followed_up":{},"first_who":{},"first_cd4":{},"timestamp":datetime.datetime.now()}
+aggregate={"enrolled":{},"patient_source":{},"eligible_no_art":{},"willing_to_return":{},"on_art_who":{},"inactive_reason":{},"reason_to_follow_up":{},"followed_up":{},"first_who":{},"first_cd4":{},"timestamp":datetime.datetime.now(),"missing":{}}
 
 def insert(aggregate,main_key,location,group_number,text=None):
     if text:
@@ -236,7 +236,14 @@ for patient in data.keys():
     location=p["location"]
     if group_number>=0:
         insert(aggregate,'enrolled',location,group_number)
- 
+        if not p["hiv_positive_date"]:
+            insert(aggregate,'missing',location,group_number,text="HIV Positive Date")
+        if not p["art_eligible_date"] and p["eligible_for_art"]:
+            insert(aggregate,'missing',location,group_number,text="ART Eligible Date if Eligible")
+        if p["who_stage_f"]=="Missing":
+            insert(aggregate,'missing',location,group_number,text="First WHO Stage")
+        if not p["cd4_count"]["First"]:
+            insert(aggregate,'missing',location,group_number,text="First CD4 Count")
         for field in data[patient].keys():
             # This is where we define what we want
             if field=="patient_source":
