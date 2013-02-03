@@ -22,10 +22,8 @@ def application(environ, start_response):
     request_body = environ['wsgi.input'].read(request_body_size)
     param = parse_qs(request_body);
     start_response(status, response_headers)
-    if "data" in param.key():
-        ret=get_data.get_data(param.get('data',[''])[0])
-    else:
-        ret="Need to specify which data to be requested"
+    ret=get_data.get_data(param.get('data',[''])[0])
+
 
     return json.dumps(ret)
 

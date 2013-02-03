@@ -2,7 +2,8 @@
 #dbConfig
 dbConfig.py
 *.py[cod]
-
+#Emacs files
+*~
 # C extensions
 *.so
 

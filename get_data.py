@@ -6,12 +6,11 @@ def get_data(data_requested):
     db=connection.openmrs_aggregation
     collection=db.aggregate
     data={}
-    print data_requested
-    
     for entry in collection.find():
-        if data_requested="all":
+        if data_requested=="all":
             data[entry["timestamp"].isoformat()]=entry
         else:
+            print entry["timestamp"]
             data[entry["timestamp"].isoformat()]=entry[data_requested]
         del entry["timestamp"]
         del entry["_id"]

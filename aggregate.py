@@ -207,7 +207,7 @@ print "Finished getting data. ",len(data.keys())
 # Calculate Aggregates:
 
 age_limit=14
-aggregate={"Enrolled":{},"patient_source":{},"eligible_no_art":{},"willing_to_return":{},"on_art_who":{},"inactive_reason":{},"reason_to_follow_up":{},"followed_up":{},"first_who":{},"first_cd4":{},"timestamp":datetime.datetime.now()}
+aggregate={"enrolled":{},"patient_source":{},"eligible_no_art":{},"willing_to_return":{},"on_art_who":{},"inactive_reason":{},"reason_to_follow_up":{},"followed_up":{},"first_who":{},"first_cd4":{},"timestamp":datetime.datetime.now()}
 
 def insert(aggregate,main_key,location,group_number,text=None):
     if text:
@@ -224,7 +224,7 @@ def insert(aggregate,main_key,location,group_number,text=None):
         if location in aggregate[main_key].keys():
             aggregate[main_key][location][group_number]+=1
         else:
-            aggregate[main_key]={location:[0,0,0,0]}
+            aggregate[main_key][location]=[0,0,0,0]
             aggregate[main_key][location][group_number]+=1
             
         
@@ -232,10 +232,11 @@ def insert(aggregate,main_key,location,group_number,text=None):
 for patient in data.keys():
     p=data[patient]
     group_number=group(data[patient])
-    print p
+    #print p
     location=p["location"]
     if group_number>=0:
-        insert(aggregate,'Enrolled',location,group_number)
+        insert(aggregate,'enrolled',location,group_number)
+ 
         for field in data[patient].keys():
             # This is where we define what we want
             if field=="patient_source":
