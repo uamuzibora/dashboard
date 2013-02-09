@@ -1,20 +1,32 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>UB Dashboard</title>
+<title>UB Reporting</title>
 <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
 <script src="js/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.0/themes/base/jquery-ui.css" />
+<script src="http://code.jquery.com/ui/1.10.0/jquery-ui.js"></script>
+
 <script>
 
+function generateReport(){
+  var start=$("#startDate").val();
+  var end=$("#endDate").val();
+  var location=$("#location").val();
+  getData(start,end,location);
 
-function table(data,location){
+}
+
+
+function table(data){
      html='<table class="table table-bordered table-hover"> \
           <tr><td></td> \
           <th colspan="2">Childern(0-14y)</th><th colspan="2"> Adults</th> \
           <th colspan="2">Totals</th><th> Grand Totals</th></tr> \
           <tr><td></td><th>M</th><th>F</th><th>M</th><th>F</th><th>M</th><th>F</th><td></td>';
      var sums=[0,0,0,0,0,0,0]
+     
      keys=Object.keys(data);
      for (var k=0;k<keys.length;k++){
          key=keys.sort()[k]
@@ -22,20 +34,13 @@ function table(data,location){
          var sum_m=0;
          var sum_f=0;
          for(var j=0;j<4;j++){
-	     var sum=0;
+	     var v=data[key][j];
+
+             if(j==0 ||j==2){sum_m+=v}
+             else {sum_f+=v}
+             sums[j]+=v;
              
-             if(location){
-	     for(var loc in data[key]){
-                 sum+=data[key][loc][j]
-                 }
-             }else{
-             sum=data[key][j];
-             }
-             if(j==0 ||j==2){sum_m+=sum}
-             else {sum_f+=sum}
-             sums[j]+=sum;
-             
-             html+='<td>'+sum+'</td>'
+             html+='<td>'+v+'</td>'
          }
 	 
          sums[4]+=sum_m
@@ -51,43 +56,82 @@ function table(data,location){
      }
      return html+'</tr></table>';
     };
-$(document).ready(function(){
 
-    $.post("http://localhost/backend",
+function getData(start,end,location){
+
+$.post("http://localhost/backend",
     {
-      data:"all",request_type:"dashboard"
+      location:location,request_type:"report",start:start,end:end
     },
     function(data,status){
       jdata=jQuery.parseJSON(data);
       $("#text").html(data);
-      
-      $("#enrolled").html(table(jdata[Object.keys(jdata)[0]]["enrolled"],false));
-      $("#patient_source").html(table(jdata[Object.keys(jdata)[0]]["patient_source"],true));
-
-      $("#eligibility_for_art").html(table(jdata[Object.keys(jdata)[0]]["eligible_no_art"],false));
-      $("#who_on_art").html(table(jdata[Object.keys(jdata)[0]]["on_art_who"],true));
-      $("#exciting_care").html(table(jdata[Object.keys(jdata)[0]]["inactive_reason"],true));
-      $("#follow_up").html(table(jdata[Object.keys(jdata)[0]]["reason_to_follow_up"],true));
-      $("#followed_up").html(table(jdata[Object.keys(jdata)[0]]["followed_up"],false));      
-      $("#willing_to_return").html(table(jdata[Object.keys(jdata)[0]]["willing_to_return"],false));
-      $("#missing_data").html(table(jdata[Object.keys(jdata)[0]]["missing"],true));
-
+      $("#new_enrolled").html(table(jdata["patient_source"]));      
+      $("#enrolled").html(table({"Enrolled":jdata["enrolled"]}));
+      $("#starting_art").html(table(jdata["start_art"]));
+      $("#ever_art").html(table({"Ever on ARV":jdata["ever_on_art"]}));
+      $("#currently_art").html(table(jdata["currently_on_art"]));      
+      $("#eligible_no_art").html(table({"Eligible, but not on ARV":jdata["eligible_no_art"]}));
+      $("#on_cotrimoxazole").html(table({"On Cotrimoxazole":jdata["on_cotrimoxazole"]}));
     });
-  
+  $("#startDate").val(start);
+  $("#endDate").val(end);
+  $("#location").val(location);
+}
+$(document).ready(function(){
+        var d= new Date();
+	getData("01/01/1990",d.getDate()+"/"+(d.getMonth()+1)+"/"+d.getFullYear(),"all");
+        $("#startDate").val("01/01/1990");
+        $("#endDate").val(d.getDate()+"/"+(d.getMonth()+1)+"/"+d.getFullYear());
+
 });
+  
+
+$(function() {
+    $("#startDate").datepicker({ dateFormat: "dd/mm/yyyy" });
+  });
+$(function() {
+    $("#endDate").datepicker({ dateFormat: "dd/mm/yyyy" });
+  });
 </script>
 </head>
 <body>
-<h1> Uamuzibora Dashboard</h1>
+<h1> Uamuzibora Reporting</h1>
+<p>Start Date: <input type="text" id="startDate" />End Date Date: <input type="text" id="endDate" />Location: 
+<select id="location">
+  <option value="all">All</option>
+  <option value="Kakamega PGH CCC">Kakamega PGH CCC</option>
+  <option value="Vihiga DH CCC">Vihiga DH CCC</option>
+  <option value="Emusanda CCC">Emusanda CCC</option>
+  <option value="Bushiri CCC">Bushiri CCC</option>
+  <option value="Kakamega PGH MCH">Kakamega PGH MCH</option>
+  <option value="Vihiga DH MCH">Vihiga DH MCH</option>
+</select>
+<button type="submit" class="btn btn-primary" onClick="generateReport()"> Generate Report</button>
+
+
 <div class="row-fluid">
   <div class="accordion" id="accordion2" >
     <div class="accordion-group">
       <div class="accordion-heading">
 	<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
-          Patients Enrolled
+          New Patients enrolled during the time period
 	</a>
       </div>
       <div id="collapseOne" class="accordion-body collapse">
+	<div class="accordion-inner">
+	  <div id="new_enrolled" class="span6">
+	  </div>
+	</div>
+      </div>
+    </div>
+    <div class="accordion-group">
+      <div class="accordion-heading">
+	<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
+          Total number ever enrolled
+	</a>
+      </div>
+      <div id="collapseTwo" class="accordion-body collapse">
 	<div class="accordion-inner">
 	  <div id="enrolled" class="span6">
 	  </div>
@@ -96,26 +140,13 @@ $(document).ready(function(){
     </div>
     <div class="accordion-group">
       <div class="accordion-heading">
-	<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
-           Patient Source
-	</a>
-      </div>
-      <div id="collapseTwo" class="accordion-body collapse">
-	<div class="accordion-inner">
-	  <div id="patient_source" class="span6">
-	  </div>
-	</div>
-      </div>
-    </div>
-    <div class="accordion-group">
-      <div class="accordion-heading">
 	<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseThree">
-	  Eligibility for ART, but not on ART
+         Starting ARV during time period
  	</a>
       </div>
       <div id="collapseThree" class="accordion-body collapse">
 	<div class="accordion-inner">
-	  <div id="eligibility_for_art" class="span6">
+	  <div id="starting_art" class="span6">
 	  </div>
 	</div>
       </div>
@@ -123,12 +154,12 @@ $(document).ready(function(){
     <div class="accordion-group">
       <div class="accordion-heading">
 	<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseFour">
-            On ART
+            Ever started ART
 	</a>
       </div>
       <div id="collapseFour" class="accordion-body collapse">
 	<div class="accordion-inner">
-	  <div id="who_on_art" class="span6">
+	  <div id="ever_art" class="span6">
 	  </div>
 	</div>
       </div>
@@ -137,12 +168,12 @@ $(document).ready(function(){
     <div class="accordion-group">
       <div class="accordion-heading">
 	<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseFive">
-            Exciting Care
+	  Currently on ARV
 	</a>
       </div>
       <div id="collapseFive" class="accordion-body collapse">
 	<div class="accordion-inner">
-	  <div id="exciting_care" class="span6">
+	  <div id="currently_art" class="span6">
 	  </div>
 	</div>
       </div>
@@ -150,25 +181,12 @@ $(document).ready(function(){
     <div class="accordion-group">
       <div class="accordion-heading">
 	<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseSix">
-          Number Of People Followed-Up
+          Eligible, but not on ARV
 	</a>
       </div>
       <div id="collapseSix" class="accordion-body collapse">
 	<div class="accordion-inner">
-	  <div id="followed_up" class="span6">
-	  </div>
-	</div>
-      </div>
-    </div>
-    <div class="accordion-group">
-      <div class="accordion-heading">
-	<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseSeven">
-          Reason For beeing lost to follow-up
-	</a>
-      </div>
-      <div id="collapseSeven" class="accordion-body collapse">
-	<div class="accordion-inner">
-	  <div id="follow_up" class="span6">
+	  <div id="eligible_no_art" class="span6">
 	  </div>
 	</div>
       </div>
@@ -176,25 +194,12 @@ $(document).ready(function(){
     <div class="accordion-group">
       <div class="accordion-heading">
 	<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseEight">
-          Willing to Return
+          On Cotrimoxazole
 	</a>
       </div>
       <div id="collapseEight" class="accordion-body collapse">
 	<div class="accordion-inner">
-	  <div id="willing_to_return" class="span6">
-	  </div>
-	</div>
-      </div>
-    </div>
-    <div class="accordion-group">
-      <div class="accordion-heading">
-	<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseNine">
-          Missing Data
-	</a>
-      </div>
-      <div id="collapseNine" class="accordion-body collapse">
-	<div class="accordion-inner">
-	  <div id="missing_data" class="span6">
+	  <div id="on_cotrimoxazole" class="span6">
 	  </div>
 	</div>
       </div>

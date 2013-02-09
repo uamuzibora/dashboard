@@ -8,30 +8,13 @@ import time,calendar
 #importing dbConfig
 import db as dbs
 from dbConfig import *
-
+from misc_functions import *
 def db_connect():
     """
     Retunrs a connection to the database
     """
     
     return dbs.DB(user=login,password=password,database=database,host=host,driver="mysql")
-
-
-def group(patient):
-    group_number=-2
-
-    if patient['age']>age_limit:
-        group_number=2
-    elif patient['age']<=age_limit:
-        group_number=0
-    
-    if patient['sex']=="F":
-        group_number+=1
-    elif patient["sex"]=="M":
-        pass
-    else:
-        group_number+=-4
-    return group_number
 
 
 # Define the data we need to get 
@@ -55,7 +38,7 @@ which={"who_stage_f":"first","who_stage_l":"last","patient_source":"first","reas
 # Multiple numeric
 multiple_numeric={"cd4_count":5497}
 #Boolean
-boolean_sql={"eligible_for_art":"select patient_id from patient where patient_id in (select distinct(person_id) from obs where concept_id=5356 and (value_coded=1206 or value_coded=1207) and voided=0) or patient_id in (select distinct(person_id) from obs where concept_id=5497 and value_numeric<350 and voided=0)","hiv_positive_date":"select distinct(person_id) as patient_id from obs where obs.concept_id=6259","art_eligible_date":"select distinct(person_id) as patient_id from obs where obs.concept_id=6260","on_art":"select patient_id from (select start_date,patient_id from orders where discontinued=0 and voided=0 group by start_date,patient_id ) as s order by start_date","followed_up":"select patient_id from encounter where form_id=4 and voided=0"}
+boolean_sql={"eligible_for_art":"select patient_id from patient where patient_id in (select distinct(person_id) from obs where concept_id=5356 and (value_coded=1206 or value_coded=1207) and voided=0) or patient_id in (select distinct(person_id) from obs where concept_id=5497 and value_numeric<350 and voided=0)","hiv_positive_date":"select distinct(person_id) as patient_id from obs where obs.concept_id=6259","art_eligible_date":"select distinct(person_id) as patient_id from obs where obs.concept_id=6260","on_art":"select patient_id from (select start_date,patient_id from orders where discontinued=0 and voided=0 group by start_date,patient_id ) as s order by start_date","followed_up":"select patient_id from encounter where form_id=4 and voided=0","on_cotrimoxazole":"select distinct(person_id) as patient_id from obs where concept_id=6113"}
 
 
 # Get all patient ids and other needed fields from the patient table
@@ -78,6 +61,20 @@ for r in res:
         data[r['patient_id']]["location"]=location[0]["name"]
     else:
         data[r['patient_id']]["location"]="Missing"
+print "pregnant"
+res=db.query_dict("select person_id,obs_datetime from obs where concept_id=5272 and voided=0 and (value_boolean=1 or value_numeric=1)")
+pregnancy={}
+for r in res:
+    if r["person_id"] in pregnancy:
+        pregnancy[r["person_id"]].append(r["obs_datetime"])
+    else:
+        pregnancy[r["person_id"]]=[r["obs_datetime"]]
+for key in data.keys():
+    if key in pregnancy.keys():
+        data[key]["pregnancy"]=pregnancy[key]
+    else:
+        data[key]["pregnancy"]=0
+
 print "age and sex"
 # Get age and sex from person table
 res=db.query_dict("Select person_id,gender,birthdate from person where voided=0 order by person_id")
@@ -124,6 +121,22 @@ for key in data.keys():
         data[key]["willing_to_return"]=1
     else:
         data[key]["willing_to_return"]=0
+
+print "drug regimen"
+res=db.query_dict("SELECT patient_id,max(start_date) as sd,sum(concept_id) as s from orders where discontinued=0 and voided=0 group by patient_id")
+res2=db.query_dict("SELECT patient_id,min(start_date) as msd from orders where voided=0 group by patient_id")
+for r in res:
+    pid=r["patient_id"]
+    data[pid]["current_regimen_start_date"]=r["sd"]
+    data[pid]["regimen_sum"]=int(r["s"])
+for r in res2:
+    pid=r["patient_id"]
+    data[pid]["first_art_start_date"]=r["msd"]
+    
+
+
+
+
 
 print "numeric_multiple"
 #Get information from obs tables for multiple numeric
@@ -203,31 +216,10 @@ for d in data:
              
 
 print "Finished getting data. ",len(data.keys())
-
 # Calculate Aggregates:
 
 age_limit=14
 aggregate={"enrolled":{},"patient_source":{},"eligible_no_art":{},"willing_to_return":{},"on_art_who":{},"inactive_reason":{},"reason_to_follow_up":{},"followed_up":{},"first_who":{},"first_cd4":{},"timestamp":datetime.datetime.now(),"missing":{}}
-
-def insert(aggregate,main_key,location,group_number,text=None):
-    if text:
-        if text in aggregate[main_key].keys():
-            if location in aggregate[main_key][text].keys():
-                aggregate[main_key][text][location][group_number]+=1
-            else:
-                aggregate[main_key][text][location]=[0,0,0,0]
-                aggregate[main_key][text][location][group_number]+=1
-        else:
-            aggregate[main_key][text]={location:[0,0,0,0]}
-            aggregate[main_key][text][location][group_number]+=1
-    else:
-        if location in aggregate[main_key].keys():
-            aggregate[main_key][location][group_number]+=1
-        else:
-            aggregate[main_key][location]=[0,0,0,0]
-            aggregate[main_key][location][group_number]+=1
-            
-        
 
 for patient in data.keys():
     p=data[patient]
@@ -282,6 +274,13 @@ print "Finished Calculating"
 connection=pymongo.MongoClient()
 db=connection.openmrs_aggregation
 db.authenticate(mongo_username,mongo_password)
+collection=db.patients
+collection.remove()
+for pid in data.keys():
+    collection.insert(data[pid])
+    
+
+
 collection=db.aggregate
 print aggregate
 latest_date=datetime.datetime(1970,12,12)

@@ -6,6 +6,7 @@ else:
 import wsgiref.util
 import json
 import get_data
+import datetime
 
 def application(environ, start_response):
     """
@@ -22,8 +23,16 @@ def application(environ, start_response):
     request_body = environ['wsgi.input'].read(request_body_size)
     param = parse_qs(request_body);
     start_response(status, response_headers)
-    ret=get_data.get_data(param.get('data',[''])[0])
-
+    req_type=param.get('request_type',[''])[0]
+    if req_type=="dashboard":
+        ret=get_data.dashboard(param.get('data',[''])[0])
+    elif req_type=="report":
+        start=param.get('start',[''])[0]
+        start=datetime.datetime.strptime(start,"%d/%m/%Y")
+        end=param.get('end',[''])[0]
+        end=datetime.datetime.strptime(end,"%d/%m/%Y")
+        location=param.get('location',[''])[0]
+        ret=get_data.report(start,end,location)
 
     return json.dumps(ret)
 
