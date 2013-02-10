@@ -37,3 +37,9 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
+
+# Bootstrap stuff
+components/bootstrap/bootstrap/*
+webroot/css/*.css
+webroot/js/bootstrap.js
+webroot/js/bootstrap.min.js
