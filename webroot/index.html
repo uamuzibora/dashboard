@@ -1,209 +1,130 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>UB Dashboard</title>
-<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
-<script src="js/jquery.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script>
-
-
-function table(data,location){
-     html='<table class="table table-bordered table-hover"> \
-          <tr><td></td> \
-          <th colspan="2">Childern(0-14y)</th><th colspan="2"> Adults</th> \
-          <th colspan="2">Totals</th><th> Grand Totals</th></tr> \
-          <tr><td></td><th>M</th><th>F</th><th>M</th><th>F</th><th>M</th><th>F</th><td></td>';
-     var sums=[0,0,0,0,0,0,0]
-     keys=Object.keys(data);
-     for (var k=0;k<keys.length;k++){
-         key=keys.sort()[k]
-         html+='<tr><td>'+key+'</td>'
-         var sum_m=0;
-         var sum_f=0;
-         for(var j=0;j<4;j++){
-	     var sum=0;
-             
-             if(location){
-	     for(var loc in data[key]){
-                 sum+=data[key][loc][j]
-                 }
-             }else{
-             sum=data[key][j];
-             }
-             if(j==0 ||j==2){sum_m+=sum}
-             else {sum_f+=sum}
-             sums[j]+=sum;
-             
-             html+='<td>'+sum+'</td>'
-         }
-	 
-         sums[4]+=sum_m
-         sums[5]+=sum_f
-	 sums[6]+=(sum_m+sum_f)
-         html+='<td>'+sum_m+'</td><td>'+sum_f+'</td><td>'+(sum_m+sum_f)+'</tr>'
-     }
-     if(keys.length>1){
-     html+="<tr><td>Sub-total</td>"
-     for(var i=0;i<sums.length;i++){
-         html+='<td>'+sums[i]+'</td>'
-     }
-     }
-     return html+'</tr></table>';
-    };
-$(document).ready(function(){
-
-    $.post("http://localhost/backend",
-    {
-      data:"all",request_type:"dashboard"
-    },
-    function(data,status){
-      jdata=jQuery.parseJSON(data);
-      var keys=Object.keys(jdata);
-      keys.sort();
-      keys.reverse()
-      latest_date=keys[0]
-      $("#text").html(data);
-      
-      $("#enrolled").html(table(jdata[latest_date]["enrolled"],false));
-      $("#patient_source").html(table(jdata[latest_date]["patient_source"],true));
-      $("#eligibility_for_art").html(table(jdata[latest_date]["eligible_no_art"],false));
-      $("#who_on_art").html(table(jdata[latest_date]["on_art_who"],true));
-      $("#exciting_care").html(table(jdata[latest_date]["inactive_reason"],true));
-      $("#follow_up").html(table(jdata[latest_date]["reason_to_follow_up"],true));
-      $("#followed_up").html(table(jdata[latest_date]["followed_up"],false));      
-      $("#willing_to_return").html(table(jdata[latest_date]["willing_to_return"],false));
-      $("#missing_data").html(table(jdata[latest_date]["missing"],true));
-
-    });
-  
-});
-</script>
+	<title>UB Dashboard</title>
+	<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
 </head>
 <body>
-<h1> Uamuzibora Dashboard</h1>
-<div class="row-fluid">
-  <div class="accordion" id="accordion2" >
-    <div class="accordion-group">
-      <div class="accordion-heading">
-	<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
-          Patients Enrolled
-	</a>
-      </div>
-      <div id="collapseOne" class="accordion-body collapse">
-	<div class="accordion-inner">
-	  <div id="enrolled" class="span6">
-	  </div>
+	<!-- Le container -->
+	<div class="container-fluid">
+		<!-- Topbar -->
+		<div class="navbar">
+			<div class="navbar-inner">
+			    <a class="brand" href="#">Uamuzi Bora Dashboard</a>
+			</div>
+		</div>
+		<!-- End Topbar -->
+		<!-- Content -->
+		<div class="row-fluid">
+			<!-- Sidebar -->
+			<div class="span3">
+				<ul class="nav nav-list" id="tablist">
+					<li class="active"><a href="#enrolled" data-toggle="pill">Patients Enrolled</a></li>
+					<li><a href="#patient_source" data-toggle="pill">Patients Source</a></li>
+					<li><a href="#eligibility_for_art" data-toggle="pill">Eligibility for ART, but not on ART</a></li>
+					<li><a href="#who_on_art" data-toggle="pill">On ART</a></li>
+					<li><a href="#exciting_care" data-toggle="pill">Exiting Care</a></li>
+					<li><a href="#followed_up" data-toggle="pill">Number Of People Followed-Up</a></li>
+					<li><a href="#follow_up" data-toggle="pill">Reason For beeing lost to follow-up</a></li>
+					<li><a href="#willing_to_return" data-toggle="pill">Willing to Return</a></li>
+					<li><a href="#missing_data" data-toggle="pill">Missing Data</a></li>
+				</ul>
+			</div>
+			<!-- End Sidebar -->
+			<!-- Data pane  -->
+			<div class="span9 tab-content">
+				<div class="tab-pane active" id="enrolled"></div>
+				<div class="tab-pane" id="patient_source"></div>
+				<div class="tab-pane" id="eligibility_for_art"></div>
+				<div class="tab-pane" id="who_on_art"></div>
+				<div class="tab-pane" id="exciting_care"></div>
+				<div class="tab-pane" id="followed_up"></div>
+				<div class="tab-pane" id="follow_up"></div>
+				<div class="tab-pane" id="willing_to_return"></div>
+				<div class="tab-pane" id="missing_data"></div>
+			</div>
+			<!-- End Data pane -->
+		</div>
 	</div>
-      </div>
-    </div>
-    <div class="accordion-group">
-      <div class="accordion-heading">
-	<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
-           Patient Source
-	</a>
-      </div>
-      <div id="collapseTwo" class="accordion-body collapse">
-	<div class="accordion-inner">
-	  <div id="patient_source" class="span6">
-	  </div>
-	</div>
-      </div>
-    </div>
-    <div class="accordion-group">
-      <div class="accordion-heading">
-	<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseThree">
-	  Eligibility for ART, but not on ART
- 	</a>
-      </div>
-      <div id="collapseThree" class="accordion-body collapse">
-	<div class="accordion-inner">
-	  <div id="eligibility_for_art" class="span6">
-	  </div>
-	</div>
-      </div>
-    </div>   
-    <div class="accordion-group">
-      <div class="accordion-heading">
-	<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseFour">
-            On ART
-	</a>
-      </div>
-      <div id="collapseFour" class="accordion-body collapse">
-	<div class="accordion-inner">
-	  <div id="who_on_art" class="span6">
-	  </div>
-	</div>
-      </div>
-    </div>
+	<!-- Le Javascript at the bottom for speediness -->
+	<script src="js/jquery.min.js"></script>
+	<script src="js/bootstrap.js"></script>
+	<script src="js/dashboard.js"></script>
+	<script>
+	function table(data,location){
+	     html='<table class="table table-bordered table-hover"> \
+	          <tr><td></td> \
+	          <th colspan="2">Childern(0-14y)</th><th colspan="2"> Adults</th> \
+	          <th colspan="2">Totals</th><th> Grand Totals</th></tr> \
+	          <tr><td></td><th>M</th><th>F</th><th>M</th><th>F</th><th>M</th><th>F</th><td></td>';
+	     var sums=[0,0,0,0,0,0,0]
+	     keys=Object.keys(data);
+	     for (var k=0;k<keys.length;k++){
+	         key=keys.sort()[k]
+	         html+='<tr><td>'+key+'</td>'
+	         var sum_m=0;
+	         var sum_f=0;
+	         for(var j=0;j<4;j++){
+		     var sum=0;
+             
+	             if(location){
+		     for(var loc in data[key]){
+	                 sum+=data[key][loc][j]
+	                 }
+	             }else{
+	             sum=data[key][j];
+	             }
+	             if(j==0 ||j==2){sum_m+=sum}
+	             else {sum_f+=sum}
+	             sums[j]+=sum;
+             
+	             html+='<td>'+sum+'</td>'
+	         }
+	 
+	         sums[4]+=sum_m
+	         sums[5]+=sum_f
+		 sums[6]+=(sum_m+sum_f)
+	         html+='<td>'+sum_m+'</td><td>'+sum_f+'</td><td>'+(sum_m+sum_f)+'</tr>'
+	     }
+	     if(keys.length>1){
+	     html+="<tr><td>Sub-total</td>"
+	     for(var i=0;i<sums.length;i++){
+	         html+='<td>'+sums[i]+'</td>'
+	     }
+	     }
+	     return html+'</tr></table>';
+	    };
+	$(document).ready(function(){
 
-    <div class="accordion-group">
-      <div class="accordion-heading">
-	<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseFive">
-            Exciting Care
-	</a>
-      </div>
-      <div id="collapseFive" class="accordion-body collapse">
-	<div class="accordion-inner">
-	  <div id="exciting_care" class="span6">
-	  </div>
-	</div>
-      </div>
-    </div>
-    <div class="accordion-group">
-      <div class="accordion-heading">
-	<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseSix">
-          Number Of People Followed-Up
-	</a>
-      </div>
-      <div id="collapseSix" class="accordion-body collapse">
-	<div class="accordion-inner">
-	  <div id="followed_up" class="span6">
-	  </div>
-	</div>
-      </div>
-    </div>
-    <div class="accordion-group">
-      <div class="accordion-heading">
-	<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseSeven">
-          Reason For beeing lost to follow-up
-	</a>
-      </div>
-      <div id="collapseSeven" class="accordion-body collapse">
-	<div class="accordion-inner">
-	  <div id="follow_up" class="span6">
-	  </div>
-	</div>
-      </div>
-    </div>
-    <div class="accordion-group">
-      <div class="accordion-heading">
-	<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseEight">
-          Willing to Return
-	</a>
-      </div>
-      <div id="collapseEight" class="accordion-body collapse">
-	<div class="accordion-inner">
-	  <div id="willing_to_return" class="span6">
-	  </div>
-	</div>
-      </div>
-    </div>
-    <div class="accordion-group">
-      <div class="accordion-heading">
-	<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseNine">
-          Missing Data
-	</a>
-      </div>
-      <div id="collapseNine" class="accordion-body collapse">
-	<div class="accordion-inner">
-	  <div id="missing_data" class="span6">
-	  </div>
-	</div>
-      </div>
-    </div>
-  </div>
-</div>
-<p id="text"></p>
+	    $.post("http://localhost/backend",
+	    {
+	      data:"all",request_type:"dashboard"
+	    },
+	    function(data,status){
+	      jdata=jQuery.parseJSON(data);
+	      var keys=Object.keys(jdata);
+	      keys.sort();
+	      keys.reverse()
+	      latest_date=keys[0]
+	      $("#text").html(data);
+      
+	      $("#enrolled").html(table(jdata[latest_date]["enrolled"],false));
+	      $("#patient_source").html(table(jdata[latest_date]["patient_source"],true));
+	      $("#eligibility_for_art").html(table(jdata[latest_date]["eligible_no_art"],false));
+	      $("#who_on_art").html(table(jdata[latest_date]["on_art_who"],true));
+	      $("#exciting_care").html(table(jdata[latest_date]["inactive_reason"],true));
+	      $("#follow_up").html(table(jdata[latest_date]["reason_to_follow_up"],true));
+	      $("#followed_up").html(table(jdata[latest_date]["followed_up"],false));      
+	      $("#willing_to_return").html(table(jdata[latest_date]["willing_to_return"],false));
+	      $("#missing_data").html(table(jdata[latest_date]["missing"],true));
+
+	    });
+  
+	});
+	  $(function () {
+	    $('#tablist a:first').tab('show');
+	  })
+	</script>
+	<!-- End Javascript -->
 </body>
 </html>
