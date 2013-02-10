@@ -132,11 +132,6 @@ for r in res:
 for r in res2:
     pid=r["patient_id"]
     data[pid]["first_art_start_date"]=r["msd"]
-    
-
-
-
-
 
 print "numeric_multiple"
 #Get information from obs tables for multiple numeric

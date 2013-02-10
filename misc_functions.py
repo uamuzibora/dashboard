@@ -1,4 +1,6 @@
 def insert(aggregate,main_key,location,group_number,text=None):
+    if group_number<0:
+        return False
     if location:
         if text:
             if text in aggregate[main_key].keys():

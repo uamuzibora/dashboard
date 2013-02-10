@@ -59,18 +59,21 @@ $(document).ready(function(){
     },
     function(data,status){
       jdata=jQuery.parseJSON(data);
+      var keys=Object.keys(jdata);
+      keys.sort();
+      keys.reverse()
+      latest_date=keys[0]
       $("#text").html(data);
       
-      $("#enrolled").html(table(jdata[Object.keys(jdata)[0]]["enrolled"],false));
-      $("#patient_source").html(table(jdata[Object.keys(jdata)[0]]["patient_source"],true));
-
-      $("#eligibility_for_art").html(table(jdata[Object.keys(jdata)[0]]["eligible_no_art"],false));
-      $("#who_on_art").html(table(jdata[Object.keys(jdata)[0]]["on_art_who"],true));
-      $("#exciting_care").html(table(jdata[Object.keys(jdata)[0]]["inactive_reason"],true));
-      $("#follow_up").html(table(jdata[Object.keys(jdata)[0]]["reason_to_follow_up"],true));
-      $("#followed_up").html(table(jdata[Object.keys(jdata)[0]]["followed_up"],false));      
-      $("#willing_to_return").html(table(jdata[Object.keys(jdata)[0]]["willing_to_return"],false));
-      $("#missing_data").html(table(jdata[Object.keys(jdata)[0]]["missing"],true));
+      $("#enrolled").html(table(jdata[latest_date]["enrolled"],false));
+      $("#patient_source").html(table(jdata[latest_date]["patient_source"],true));
+      $("#eligibility_for_art").html(table(jdata[latest_date]["eligible_no_art"],false));
+      $("#who_on_art").html(table(jdata[latest_date]["on_art_who"],true));
+      $("#exciting_care").html(table(jdata[latest_date]["inactive_reason"],true));
+      $("#follow_up").html(table(jdata[latest_date]["reason_to_follow_up"],true));
+      $("#followed_up").html(table(jdata[latest_date]["followed_up"],false));      
+      $("#willing_to_return").html(table(jdata[latest_date]["willing_to_return"],false));
+      $("#missing_data").html(table(jdata[latest_date]["missing"],true));
 
     });
   
