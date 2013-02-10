@@ -36,7 +36,7 @@ def report(start_date,end_date,location):
                     insert(data,'start_art',None,group_number,text=p["who_stage_f"])
             if p["date"]<end_date:
                 insert(data,'enrolled',None,group_number)
-                if p["on_art"] and "first_art_start_date" in p.keys() and p["first_art_start_date"]<end_date:
+                if "first_art_start_date" in p.keys() and p["first_art_start_date"]<end_date:
                     insert(data,'ever_on_art',None,group_number)
                 if p["on_art"] and "current_regimen_start_date" in p.keys() and p["current_regimen_start_date"]<end_date:                
                     #if pregnant
@@ -56,7 +56,7 @@ def pregnant(p,end_date):
     else:
         for date in p["pregnancy"]:
             date_diff=end_date-date
-            if date_diff.days<9*30: #9 moths
+            if date_diff.days<9*30: #9 months
                 return True
     return False
 if __name__=="__main__":
