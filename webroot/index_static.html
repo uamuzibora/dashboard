@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>UB Dashboard</title>
+<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script>
+
+
+function table(data,location){
+     html='<table class="table table-bordered table-hover"> \
+          <tr><td></td> \
+          <th colspan="2">Childern(0-14y)</th><th colspan="2"> Adults</th> \
+          <th colspan="2">Totals</th><th> Grand Totals</th></tr> \
+          <tr><td></td><th>M</th><th>F</th><th>M</th><th>F</th><th>M</th><th>F</th><td></td>';
+     var sums=[0,0,0,0,0,0,0]
+     keys=Object.keys(data);
+     for (var k=0;k<keys.length;k++){
+         key=keys.sort()[k]
+         html+='<tr><td>'+key+'</td>'
+         var sum_m=0;
+         var sum_f=0;
+         for(var j=0;j<4;j++){
+	     var sum=0;
+             
+             if(location){
+	     for(var loc in data[key]){
+                 sum+=data[key][loc][j]
+                 }
+             }else{
+             sum=data[key][j];
+             }
+             if(j==0 ||j==2){sum_m+=sum}
+             else {sum_f+=sum}
+             sums[j]+=sum;
+             
+             html+='<td>'+sum+'</td>'
+         }
+	 
+         sums[4]+=sum_m
+         sums[5]+=sum_f
+	 sums[6]+=(sum_m+sum_f)
+         html+='<td>'+sum_m+'</td><td>'+sum_f+'</td><td>'+(sum_m+sum_f)+'</tr>'
+     }
+     if(keys.length>1){
+     html+="<tr><td>Sub-total</td>"
+     for(var i=0;i<sums.length;i++){
+         html+='<td>'+sums[i]+'</td>'
+     }
+     }
+     return html+'</tr></table>';
+    };
+$(document).ready(function(){
+      data='{"2013-02-03T18:45:12.794000": {"followed_up": {"Kakamega PGH CCC": [25, 28, 160, 272]}, "first_cd4": {"<350": {"Kakamega PGH MCH": [0, 0, 0, 1], "Vihiga DH CCC": [3, 1, 29, 69], "Bushiri CCC": [0, 0, 21, 26], "Missing": [0, 0, 0, 2], "Emusanda CCC": [0, 1, 1, 6], "Kakamega PGH CCC": [97, 113, 1533, 2635]}, ">350": {"Kakamega PGH CCC": [177, 192, 674, 1637], "Emusanda CCC": [0, 0, 2, 11], "Vihiga DH CCC": [3, 5, 7, 35], "Bushiri CCC": [2, 2, 3, 37]}, "Missing": {"Vihiga DH MCH": [0, 0, 0, 1], "Vihiga DH CCC": [3, 6, 25, 80], "Bushiri CCC": [2, 3, 4, 20], "Missing": [2, 0, 1, 9], "Emusanda CCC": [1, 0, 2, 9], "Kakamega PGH CCC": [101, 107, 544, 994]}}, "patient_source": {"IPD-CH": {"Kakamega PGH CCC": [4, 5, 3, 10]}, "Missing": {"Kakamega PGH CCC": [23, 34, 134, 258], "Missing": [2, 0, 1, 11]}, "TB CLINIC": {"Kakamega PGH CCC": [15, 14, 85, 123], "Bushiri CCC": [0, 0, 4, 3], "Vihiga DH CCC": [0, 1, 4, 3]}, "PMTCT": {"Kakamega PGH CCC": [7, 8, 42, 523], "Emusanda CCC": [0, 0, 0, 2], "Bushiri CCC": [0, 0, 0, 15], "Vihiga DH CCC": [0, 1, 0, 10]}, "MCH-CHILD": {"Kakamega PGH CCC": [2, 5, 2, 3], "Vihiga DH CCC": [2, 2, 0, 0]}, "Unknown Entry Point": {"Kakamega PGH CCC": [18, 15, 69, 129], "Vihiga DH CCC": [1, 1, 5, 2], "Bushiri CCC": [0, 0, 2, 5]}, "IPD-AD": {"Kakamega PGH CCC": [45, 39, 191, 290], "Vihiga DH CCC": [0, 0, 0, 3]}, "OTHER NON-CODED": {"Kakamega PGH CCC": [139, 146, 520, 884], "Emusanda CCC": [1, 0, 5, 14], "Vihiga DH CCC": [0, 3, 3, 7], "Bushiri CCC": [4, 3, 15, 39]}, "VOLUNTARY COUNSELLING AND TESTING": {"Kakamega PGH MCH": [0, 0, 0, 1], "Vihiga DH CCC": [5, 4, 49, 158], "Bushiri CCC": [0, 2, 7, 19], "Vihiga DH MCH": [0, 0, 0, 1], "Emusanda CCC": [0, 1, 0, 10], "Kakamega PGH CCC": [88, 98, 1575, 2851]}, "OUTPATIENT DEPARTMENT": {"Kakamega PGH CCC": [34, 48, 130, 195], "Vihiga DH CCC": [1, 0, 0, 1], "Bushiri CCC": [0, 0, 0, 2]}}, "willing_to_return": {"Kakamega PGH CCC": [4, 9, 44, 94]}, "inactive_reason": {"DEFAULT": {"Kakamega PGH CCC": [8, 5, 26, 42], "Vihiga DH CCC": [1, 0, 0, 0]}, "COMPLETED TOTAL PMTCT": {"Kakamega PGH CCC": [0, 0, 2, 6]}, "STOP": {"Kakamega PGH CCC": [0, 0, 2, 3]}, "LOST TO FOLLOWUP": {"Kakamega PGH MCH": [0, 0, 0, 1], "Vihiga DH CCC": [3, 7, 42, 115], "Bushiri CCC": [1, 2, 3, 12], "Vihiga DH MCH": [0, 0, 0, 1], "Emusanda CCC": [1, 0, 1, 8], "Kakamega PGH CCC": [132, 155, 1231, 2215]}, "DUPLICATE ENTRY": {"Kakamega PGH CCC": [0, 0, 1, 0], "Bushiri CCC": [0, 0, 0, 1]}, "TRANSFER CARE TO OTHER CENTER": {"Kakamega PGH CCC": [20, 22, 150, 324], "Bushiri CCC": [0, 0, 1, 2], "Vihiga DH CCC": [0, 3, 2, 18]}, "OTHER NON-CODED": {"Kakamega PGH CCC": [0, 0, 5, 8]}, "PEP END": {"Kakamega PGH CCC": [0, 0, 0, 1]}, "DECEASED": {"Kakamega PGH CCC": [12, 12, 60, 86], "Bushiri CCC": [0, 0, 3, 4], "Vihiga DH CCC": [0, 0, 2, 2], "Missing": [0, 0, 0, 1]}}, "missing": {"First CD4 Count": {"Vihiga DH MCH": [0, 0, 0, 1], "Vihiga DH CCC": [3, 6, 25, 79], "Bushiri CCC": [2, 3, 4, 20], "Missing": [2, 0, 1, 9], "Emusanda CCC": [1, 0, 2, 8], "Kakamega PGH CCC": [101, 107, 542, 990]}, "ART Eligible Date": {"Vihiga DH MCH": [0, 0, 0, 1], "Vihiga DH CCC": [2, 5, 27, 51], "Bushiri CCC": [0, 0, 18, 26], "Missing": [0, 0, 0, 2], "Emusanda CCC": [0, 0, 2, 3], "Kakamega PGH CCC": [82, 84, 675, 1243]}, "First WHO Stage": {"Kakamega PGH CCC": [65, 74, 580, 1054], "Vihiga DH CCC": [1, 1, 0, 1], "Bushiri CCC": [1, 0, 0, 1], "Missing": [2, 0, 1, 9]}, "HIV Positive Date": {"Kakamega PGH CCC": [26, 38, 208, 441], "Missing": [2, 0, 1, 11], "Bushiri CCC": [0, 1, 6, 28], "Vihiga DH CCC": [1, 6, 11, 34], "Vihiga DH MCH": [0, 0, 0, 1]}}, "first_who": {"WHO STAGE 2 ADULT": {"Kakamega PGH CCC": [101, 140, 680, 1450], "Emusanda CCC": [1, 0, 1, 10], "Vihiga DH CCC": [4, 2, 13, 47], "Bushiri CCC": [1, 2, 6, 8], "Missing": [0, 0, 0, 1]}, "WHO STAGE 1 ADULT": {"Kakamega PGH CCC": [49, 64, 406, 1027], "Emusanda CCC": [0, 0, 1, 13], "Bushiri CCC": [2, 2, 10, 50], "Vihiga DH CCC": [2, 2, 9, 44]}, "Missing": {"Kakamega PGH CCC": [65, 74, 580, 1054], "Vihiga DH CCC": [1, 1, 0, 1], "Bushiri CCC": [1, 0, 0, 1], "Missing": [2, 0, 1, 9]}, "WHO STAGE 3 ADULT": {"Kakamega PGH MCH": [0, 0, 0, 1], "Vihiga DH MCH": [0, 0, 0, 1], "Vihiga DH CCC": [1, 4, 23, 53], "Bushiri CCC": [0, 0, 7, 5], "Missing": [0, 0, 0, 1], "Emusanda CCC": [0, 1, 3, 3], "Kakamega PGH CCC": [79, 56, 657, 961]}, "WHO STAGE 4 ADULT": {"Kakamega PGH CCC": [4, 6, 91, 111], "Vihiga DH CCC": [0, 0, 2, 6], "Bushiri CCC": [0, 0, 0, 1]}, "WHO STAGE MISSING": {"Kakamega PGH CCC": [77, 72, 337, 663], "Vihiga DH CCC": [1, 3, 14, 33], "Bushiri CCC": [0, 1, 5, 18]}}, "reason_to_follow_up": {"STIGMA, DISCLOSURE OR PRIVACY ISSUES": {"Kakamega PGH CCC": [1, 0, 2, 5]}, "Missing": {"Kakamega PGH MCH": [0, 0, 0, 1], "Vihiga DH MCH": [0, 0, 0, 1], "Vihiga DH CCC": [9, 12, 61, 184], "Bushiri CCC": [4, 5, 28, 83], "Missing": [2, 0, 1, 11], "Emusanda CCC": [1, 1, 5, 26], "Kakamega PGH CCC": [369, 403, 2706, 5171]}, "FELT BETTER": {"Kakamega PGH CCC": [0, 0, 1, 6]}, "DELIVERY / TRAVEL PROBLEMS": {"Kakamega PGH CCC": [0, 0, 6, 2]}, "TOXICITY, DRUG": {"Kakamega PGH CCC": [0, 0, 0, 1]}, "DECEASED": {"Kakamega PGH CCC": [1, 1, 1, 3]}, "TRANSFER CARE TO OTHER CENTER": {"Kakamega PGH CCC": [2, 6, 29, 73]}, "OTHER NON-CODED": {"Kakamega PGH CCC": [2, 2, 5, 4]}, "ALCOHOLISM": {"Kakamega PGH CCC": [0, 0, 1, 0]}, "DEPRESSION": {"Kakamega PGH CCC": [0, 0, 0, 1]}}, "on_art_who": {"WHO STAGE 2 ADULT": {"Kakamega PGH CCC": [50, 67, 337, 837], "Emusanda CCC": [0, 0, 0, 3], "Vihiga DH CCC": [0, 0, 2, 11], "Bushiri CCC": [1, 1, 4, 2]}, "WHO STAGE 1 ADULT": {"Kakamega PGH CCC": [18, 24, 150, 310], "Emusanda CCC": [0, 0, 0, 5], "Vihiga DH CCC": [1, 0, 4, 8], "Bushiri CCC": [0, 0, 6, 15]}, "Missing": {"Kakamega PGH CCC": [21, 20, 251, 416]}, "WHO STAGE 3 ADULT": {"Kakamega PGH CCC": [34, 41, 400, 623], "Emusanda CCC": [0, 1, 1, 3], "Vihiga DH CCC": [0, 1, 6, 15], "Bushiri CCC": [0, 0, 4, 3], "Missing": [0, 0, 0, 1]}, "WHO STAGE 4 ADULT": {"Kakamega PGH CCC": [3, 1, 55, 58], "Vihiga DH CCC": [0, 0, 1, 0]}, "WHO STAGE MISSING": {"Kakamega PGH CCC": [12, 6, 58, 101], "Bushiri CCC": [0, 0, 1, 0], "Vihiga DH CCC": [1, 1, 2, 2]}}, "eligible_no_art": {"Kakamega PGH MCH": [0, 0, 0, 1], "Vihiga DH MCH": [0, 0, 0, 1], "Vihiga DH CCC": [2, 5, 30, 77], "Bushiri CCC": [0, 0, 8, 14], "Missing": [0, 0, 0, 1], "Emusanda CCC": [0, 0, 2, 2], "Kakamega PGH CCC": [72, 82, 706, 1192]}, "enrolled": {"Kakamega PGH MCH": [0, 0, 0, 1], "Vihiga DH MCH": [0, 0, 0, 1], "Vihiga DH CCC": [9, 12, 61, 184], "Bushiri CCC": [4, 5, 28, 83], "Missing": [2, 0, 1, 11], "Emusanda CCC": [1, 1, 5, 26], "Kakamega PGH CCC": [375, 412, 2751, 5266]}}}'
+
+      jdata=jQuery.parseJSON(data);
+      var keys=Object.keys(jdata);
+      keys.sort();
+      keys.reverse()
+      latest_date=keys[0]
+      $("#text").html(data);
+      
+      $("#enrolled").html(table(jdata[latest_date]["enrolled"],false));
+      $("#patient_source").html(table(jdata[latest_date]["patient_source"],true));
+      $("#eligibility_for_art").html(table(jdata[latest_date]["eligible_no_art"],false));
+      $("#who_on_art").html(table(jdata[latest_date]["on_art_who"],true));
+      $("#exciting_care").html(table(jdata[latest_date]["inactive_reason"],true));
+      $("#follow_up").html(table(jdata[latest_date]["reason_to_follow_up"],true));
+      $("#followed_up").html(table(jdata[latest_date]["followed_up"],false));      
+      $("#willing_to_return").html(table(jdata[latest_date]["willing_to_return"],false));
+      $("#missing_data").html(table(jdata[latest_date]["missing"],true));
+
+    
+  
+});
+</script>
+</head>
+<body>
+<h1> Uamuzibora Dashboard</h1>
+<div class="row-fluid">
+  <div class="accordion" id="accordion2" >
+    <div class="accordion-group">
+      <div class="accordion-heading">
+	<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
+          Patients Enrolled
+	</a>
+      </div>
+      <div id="collapseOne" class="accordion-body collapse">
+	<div class="accordion-inner">
+	  <div id="enrolled" class="span6">
+	  </div>
+	</div>
+      </div>
+    </div>
+    <div class="accordion-group">
+      <div class="accordion-heading">
+	<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
+           Patient Source
+	</a>
+      </div>
+      <div id="collapseTwo" class="accordion-body collapse">
+	<div class="accordion-inner">
+	  <div id="patient_source" class="span6">
+	  </div>
+	</div>
+      </div>
+    </div>
+    <div class="accordion-group">
+      <div class="accordion-heading">
+	<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseThree">
+	  Eligibility for ART, but not on ART
+ 	</a>
+      </div>
+      <div id="collapseThree" class="accordion-body collapse">
+	<div class="accordion-inner">
+	  <div id="eligibility_for_art" class="span6">
+	  </div>
+	</div>
+      </div>
+    </div>   
+    <div class="accordion-group">
+      <div class="accordion-heading">
+	<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseFour">
+            On ART
+	</a>
+      </div>
+      <div id="collapseFour" class="accordion-body collapse">
+	<div class="accordion-inner">
+	  <div id="who_on_art" class="span6">
+	  </div>
+	</div>
+      </div>
+    </div>
+
+    <div class="accordion-group">
+      <div class="accordion-heading">
+	<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseFive">
+            Exciting Care
+	</a>
+      </div>
+      <div id="collapseFive" class="accordion-body collapse">
+	<div class="accordion-inner">
+	  <div id="exciting_care" class="span6">
+	  </div>
+	</div>
+      </div>
+    </div>
+    <div class="accordion-group">
+      <div class="accordion-heading">
+	<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseSix">
+          Number Of People Followed-Up
+	</a>
+      </div>
+      <div id="collapseSix" class="accordion-body collapse">
+	<div class="accordion-inner">
+	  <div id="followed_up" class="span6">
+	  </div>
+	</div>
+      </div>
+    </div>
+    <div class="accordion-group">
+      <div class="accordion-heading">
+	<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseSeven">
+          Reason For beeing lost to follow-up
+	</a>
+      </div>
+      <div id="collapseSeven" class="accordion-body collapse">
+	<div class="accordion-inner">
+	  <div id="follow_up" class="span6">
+	  </div>
+	</div>
+      </div>
+    </div>
+    <div class="accordion-group">
+      <div class="accordion-heading">
+	<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseEight">
+          Willing to Return
+	</a>
+      </div>
+      <div id="collapseEight" class="accordion-body collapse">
+	<div class="accordion-inner">
+	  <div id="willing_to_return" class="span6">
+	  </div>
+	</div>
+      </div>
+    </div>
+    <div class="accordion-group">
+      <div class="accordion-heading">
+	<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseNine">
+          Missing Data
+	</a>
+      </div>
+      <div id="collapseNine" class="accordion-body collapse">
+	<div class="accordion-inner">
+	  <div id="missing_data" class="span6">
+	  </div>
+	</div>
+      </div>
+    </div>
+  </div>
+</div>
+<p id="text"></p>
+</body>
+</html>
