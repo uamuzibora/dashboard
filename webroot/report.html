@@ -1,211 +1,148 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>UB Reporting</title>
-<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
-<script src="js/jquery.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.0/themes/base/jquery-ui.css" />
-<script src="http://code.jquery.com/ui/1.10.0/jquery-ui.js"></script>
-
-<script>
-
-function generateReport(){
-  var start=$("#startDate").val();
-  var end=$("#endDate").val();
-  var location=$("#location").val();
-  getData(start,end,location);
-
-}
-
-
-function table(data){
-     html='<table class="table table-bordered table-hover"> \
-          <tr><td></td> \
-          <th colspan="2">Childern(0-14y)</th><th colspan="2"> Adults</th> \
-          <th colspan="2">Totals</th><th> Grand Totals</th></tr> \
-          <tr><td></td><th>M</th><th>F</th><th>M</th><th>F</th><th>M</th><th>F</th><td></td>';
-     var sums=[0,0,0,0,0,0,0]
-     
-     keys=Object.keys(data);
-     for (var k=0;k<keys.length;k++){
-         key=keys.sort()[k]
-         html+='<tr><td>'+key+'</td>'
-         var sum_m=0;
-         var sum_f=0;
-         for(var j=0;j<4;j++){
-	     var v=data[key][j];
-
-             if(j==0 ||j==2){sum_m+=v}
-             else {sum_f+=v}
-             sums[j]+=v;
-             
-             html+='<td>'+v+'</td>'
-         }
-	 
-         sums[4]+=sum_m
-         sums[5]+=sum_f
-	 sums[6]+=(sum_m+sum_f)
-         html+='<td>'+sum_m+'</td><td>'+sum_f+'</td><td>'+(sum_m+sum_f)+'</tr>'
-     }
-     if(keys.length>1){
-     html+="<tr><td>Sub-total</td>"
-     for(var i=0;i<sums.length;i++){
-         html+='<td>'+sums[i]+'</td>'
-     }
-     }
-     return html+'</tr></table>';
-    };
-
-function getData(start,end,location){
-
-$.post("http://localhost/backend",
-    {
-      location:location,request_type:"report",start:start,end:end
-    },
-    function(data,status){
-      jdata=jQuery.parseJSON(data);
-      $("#text").html(data);
-      $("#new_enrolled").html(table(jdata["patient_source"]));      
-      $("#enrolled").html(table({"Enrolled":jdata["enrolled"]}));
-      $("#starting_art").html(table(jdata["start_art"]));
-      $("#ever_art").html(table({"Ever on ARV":jdata["ever_on_art"]}));
-      $("#currently_art").html(table(jdata["currently_on_art"]));      
-      $("#eligible_no_art").html(table({"Eligible, but not on ARV":jdata["eligible_no_art"]}));
-      $("#on_cotrimoxazole").html(table({"On Cotrimoxazole":jdata["on_cotrimoxazole"]}));
-    });
-  $("#startDate").val(start);
-  $("#endDate").val(end);
-  $("#location").val(location);
-}
-$(document).ready(function(){
-        var d= new Date();
-	getData("01/01/1990",d.getDate()+"/"+(d.getMonth()+1)+"/"+d.getFullYear(),"all");
-        $("#startDate").val("01/01/1990");
-        $("#endDate").val(d.getDate()+"/"+(d.getMonth()+1)+"/"+d.getFullYear());
-
-});
-  
-
-$(function() {
-    $("#startDate").datepicker({ dateFormat: "dd/mm/yy" });
-  });
-$(function() {
-    $("#endDate").datepicker({ dateFormat: "dd/mm/yy" });
-  });
-</script>
+	<title>UB Reporting</title>
+	<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
 </head>
 <body>
-<h1> Uamuzibora Reporting</h1>
-<p>Start Date: <input type="text" id="startDate" />End Date Date: <input type="text" id="endDate" />Location: 
-<select id="location">
-  <option value="all">All</option>
-  <option value="Kakamega PGH CCC">Kakamega PGH CCC</option>
-  <option value="Vihiga DH CCC">Vihiga DH CCC</option>
-  <option value="Emusanda CCC">Emusanda CCC</option>
-  <option value="Bushiri CCC">Bushiri CCC</option>
-  <option value="Kakamega PGH MCH">Kakamega PGH MCH</option>
-  <option value="Vihiga DH MCH">Vihiga DH MCH</option>
-</select>
-<button type="submit" class="btn btn-primary" onClick="generateReport()"> Generate Report</button>
+	<!-- Le container -->
+	<div class="container-fluid">
+		<!-- Topbar -->
+		<div class="navbar">
+			<div class="navbar-inner">
+			    <a class="brand" href="#">Uamuzi Bora Reporting</a>
+				<form class="navbar-form pull-right">
+					<div class="input-append date" id="startDate" data-date-format="dd/mm/yyyy">
+						<input class="span2" type="text">
+						<span class="add-on"><i class="icon-th"></i></span>
+					</div>
+					<div class="input-append date" id="endDate" data-date-format="dd/mm/yyyy">
+						<input class="span2" type="text">
+						<span class="add-on"><i class="icon-th"></i></span>
+					</div>
+					<select id="location">
+						<option value="all">All</option>
+						<option value="Kakamega PGH CCC">Kakamega PGH CCC</option>
+						<option value="Vihiga DH CCC">Vihiga DH CCC</option>
+						<option value="Emusanda CCC">Emusanda CCC</option>
+						<option value="Bushiri CCC">Bushiri CCC</option>
+						<option value="Kakamega PGH MCH">Kakamega PGH MCH</option>
+						<option value="Vihiga DH MCH">Vihiga DH MCH</option>
+					</select>
+					<button type="submit" class="btn" onClick="generateReport()">Generate Report</button>
+				</form>
+			</div>
+		</div>
+		<!-- End Topbar -->
+		<!-- Content -->
+		<div class="row-fluid">
+			<!-- Sidebar -->
+			<div class="span3">
+				<ul class="nav nav-list" id="tablist">
+					<li class="active"><a href="#new_enrolled" data-toggle="pill">New Patients Enrolled</a></li>
+					<li><a href="#enrolled" data-toggle="pill">Total Patients Enrolled To Date</a></li>
+					<li><a href="#starting_art" data-toggle="pill">Patients Starting ART</a></li>
+					<li><a href="#ever_art" data-toggle="pill">Total Patients Started On ART To Date</a></li>
+					<li><a href="#currently_art" data-toggle="pill">Patients On ART</a></li>
+					<li><a href="#eligible_no_art" data-toggle="pill">Eligible For ART But Not On ART</a></li>
+					<li><a href="#on_cotrimoxazole" data-toggle="pill">Patients On Cotrimoxazole</a></li>
+				</ul>
+			</div>
+			<!-- End Sidebar -->
+			<!-- Data pane  -->
+			<div class="span9 tab-content">
+				<div class="tab-pane active" id="new_enrolled"></div>
+				<div class="tab-pane" id="enrolled"></div>
+				<div class="tab-pane" id="starting_art"></div>
+				<div class="tab-pane" id="evert_art"></div>
+				<div class="tab-pane" id="currently_art"></div>
+				<div class="tab-pane" id="eligible_no_art"></div>
+				<div class="tab-pane" id="on_cotrimoxazole"></div>
+			</div>
+			<!-- End Data pane -->
+		</div>
+	</div>
+	<!-- Le Javascript at the bottom for speediness -->
+	<script src="js/jquery.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="http://code.jquery.com/ui/1.10.0/jquery-ui.js"></script>
+	<script>
+	function generateReport(){
+	  var start=$("#startDate").val();
+	  var end=$("#endDate").val();
+	  var location=$("#location").val();
+	  getData(start,end,location);
+	}
 
+	function table(data){
+	     html='<table class="table table-bordered table-hover"> \
+	          <tr><td></td> \
+	          <th colspan="2">Childern(0-14y)</th><th colspan="2"> Adults</th> \
+	          <th colspan="2">Totals</th><th> Grand Totals</th></tr> \
+	          <tr><td></td><th>M</th><th>F</th><th>M</th><th>F</th><th>M</th><th>F</th><td></td>';
+	     var sums=[0,0,0,0,0,0,0]
+     
+	     keys=Object.keys(data);
+	     for (var k=0;k<keys.length;k++){
+	         key=keys.sort()[k]
+	         html+='<tr><td>'+key+'</td>'
+	         var sum_m=0;
+	         var sum_f=0;
+	         for(var j=0;j<4;j++){
+		     var v=data[key][j];
 
-<div class="row-fluid">
-  <div class="accordion" id="accordion2" >
-    <div class="accordion-group">
-      <div class="accordion-heading">
-	<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
-          New Patients enrolled during the time period
-	</a>
-      </div>
-      <div id="collapseOne" class="accordion-body collapse">
-	<div class="accordion-inner">
-	  <div id="new_enrolled" class="span6">
-	  </div>
-	</div>
-      </div>
-    </div>
-    <div class="accordion-group">
-      <div class="accordion-heading">
-	<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
-          Total number ever enrolled
-	</a>
-      </div>
-      <div id="collapseTwo" class="accordion-body collapse">
-	<div class="accordion-inner">
-	  <div id="enrolled" class="span6">
-	  </div>
-	</div>
-      </div>
-    </div>
-    <div class="accordion-group">
-      <div class="accordion-heading">
-	<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseThree">
-         Starting ARV during time period
- 	</a>
-      </div>
-      <div id="collapseThree" class="accordion-body collapse">
-	<div class="accordion-inner">
-	  <div id="starting_art" class="span6">
-	  </div>
-	</div>
-      </div>
-    </div>   
-    <div class="accordion-group">
-      <div class="accordion-heading">
-	<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseFour">
-            Ever started ART
-	</a>
-      </div>
-      <div id="collapseFour" class="accordion-body collapse">
-	<div class="accordion-inner">
-	  <div id="ever_art" class="span6">
-	  </div>
-	</div>
-      </div>
-    </div>
+	             if(j==0 ||j==2){sum_m+=v}
+	             else {sum_f+=v}
+	             sums[j]+=v;
+             
+	             html+='<td>'+v+'</td>'
+	         }
+	 
+	         sums[4]+=sum_m
+	         sums[5]+=sum_f
+		 sums[6]+=(sum_m+sum_f)
+	         html+='<td>'+sum_m+'</td><td>'+sum_f+'</td><td>'+(sum_m+sum_f)+'</tr>'
+	     }
+	     if(keys.length>1){
+	     html+="<tr><td>Sub-total</td>"
+	     for(var i=0;i<sums.length;i++){
+	         html+='<td>'+sums[i]+'</td>'
+	     }
+	     }
+	     return html+'</tr></table>';
+	    };
 
-    <div class="accordion-group">
-      <div class="accordion-heading">
-	<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseFive">
-	  Currently on ARV
-	</a>
-      </div>
-      <div id="collapseFive" class="accordion-body collapse">
-	<div class="accordion-inner">
-	  <div id="currently_art" class="span6">
-	  </div>
-	</div>
-      </div>
-    </div>
-    <div class="accordion-group">
-      <div class="accordion-heading">
-	<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseSix">
-          Eligible, but not on ARV
-	</a>
-      </div>
-      <div id="collapseSix" class="accordion-body collapse">
-	<div class="accordion-inner">
-	  <div id="eligible_no_art" class="span6">
-	  </div>
-	</div>
-      </div>
-    </div>
-    <div class="accordion-group">
-      <div class="accordion-heading">
-	<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseEight">
-          On Cotrimoxazole
-	</a>
-      </div>
-      <div id="collapseEight" class="accordion-body collapse">
-	<div class="accordion-inner">
-	  <div id="on_cotrimoxazole" class="span6">
-	  </div>
-	</div>
-      </div>
-    </div>
-  </div>
-</div>
-<p id="text"></p>
+	function getData(start,end,location){
+
+	$.post("http://localhost/backend",
+	    {
+	      location:location,request_type:"report",start:start,end:end
+	    },
+	    function(data,status){
+	      jdata=jQuery.parseJSON(data);
+	      $("#text").html(data);
+	      $("#new_enrolled").html(table(jdata["patient_source"]));      
+	      $("#enrolled").html(table({"Enrolled":jdata["enrolled"]}));
+	      $("#starting_art").html(table(jdata["start_art"]));
+	      $("#ever_art").html(table({"Ever on ARV":jdata["ever_on_art"]}));
+	      $("#currently_art").html(table(jdata["currently_on_art"]));      
+	      $("#eligible_no_art").html(table({"Eligible, but not on ARV":jdata["eligible_no_art"]}));
+	      $("#on_cotrimoxazole").html(table({"On Cotrimoxazole":jdata["on_cotrimoxazole"]}));
+	    });
+	  $("#startDate").val(start);
+	  $("#endDate").val(end);
+	  $("#location").val(location);
+	}
+	$(document).ready(function(){
+	        var d= new Date();
+		getData("01/01/1990",d.getDate()+"/"+(d.getMonth()+1)+"/"+d.getFullYear(),"all");
+	        $("#startDate").val("01/01/1990");
+	        $("#endDate").val(d.getDate()+"/"+(d.getMonth()+1)+"/"+d.getFullYear());
+
+	});
+	$(function () {
+	    $('#tablist a:first').tab('show');
+	  })
+	</script>
 </body>
 </html>
