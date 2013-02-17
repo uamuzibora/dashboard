@@ -40,6 +40,9 @@ nosetests.xml
 
 # Bootstrap stuff
 components/bootstrap/bootstrap/*
-webroot/css/*.css
+webroot/css/bootstrap.css
+webroot/css/bootstrap.min.css
+webroot/css/bootstrap-responsive.css
+webroot/css/bootstrap-responsive.min.css
 webroot/js/bootstrap.js
 webroot/js/bootstrap.min.js
