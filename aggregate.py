@@ -17,6 +17,8 @@ def db_connect():
     return dbs.DB(user=login,password=password,database=database,host=host,driver="mysql")
 
 
+
+
 # Define the data we need to get 
 # run through all patients and construct master dictionary with all needed data
 # Categorize
@@ -198,7 +200,10 @@ for field in boolean_sql.keys():
             data[p][field]=1
         else:
             data[p][field]=0
-    
+ 
+
+
+   
 
 #Clean up 
 for d in data:
@@ -214,7 +219,8 @@ print "Finished getting data. ",len(data.keys())
 # Calculate Aggregates:
 
 age_limit=14
-aggregate={"enrolled":{},"patient_source":{},"eligible_no_art":{},"willing_to_return":{},"on_art_who":{},"inactive_reason":{},"reason_to_follow_up":{},"followed_up":{},"first_who":{},"first_cd4":{},"timestamp":datetime.datetime.now(),"missing":{}}
+t=datetime.datetime.now()
+aggregate={"enrolled":{},"patient_source":{},"eligible_no_art":{},"willing_to_return":{},"on_art_who":{},"inactive_reason":{},"reason_to_follow_up":{},"followed_up":{},"first_who":{},"first_cd4":{}, "timestamp": t, "missing":{}}
 
 for patient in data.keys():
     p=data[patient]
@@ -267,28 +273,45 @@ for patient in data.keys():
 print "Finished Calculating"
 
 connection=pymongo.MongoClient()
-db=connection.openmrs_aggregation
-db.authenticate(mongo_username,mongo_password)
-collection=db.patients
+db_mongo=connection.openmrs_aggregation
+db_mongo.authenticate(mongo_username,mongo_password)
+collection=db_mongo.patients
 collection.remove()
 for pid in data.keys():
     collection.insert(data[pid])
-    
-
-
-collection=db.aggregate
+ 
+collection=db_mongo.aggregate
 print aggregate
 latest_date=datetime.datetime(1970,12,12)
 for entry in collection.find():
     if entry["timestamp"]>latest_date:
         latest_date=entry["timestamp"]
 
-if (aggregate["timestamp"]-latest_date).seconds>12*3600:# Have at least 12 hours between each update
+if (aggregate["timestamp"]-latest_date).seconds>5*3600:# Have at least 12 hours between each update
     collection.insert(aggregate)
 else:
     print "already have a recent record"
 
+# Performance review
+initial_raw=db.query_dict("select username,count(encounter_id) as number from encounter inner join users on encounter.creator=user_id where form_id=1 and encounter_datetime>date_sub(curdate(),interval 7 day) group by encounter.creator")
+initial={}
+for r in initial_raw:
+    name=" ".join(r['username'].split('.'))
+    initial[name]=r['number']
+return_visit_raw=db.query_dict("select username,count(encounter_id) as number from encounter inner join users on encounter.creator=user_id where form_id=2 and encounter_datetime>date_sub(curdate(),interval 7 day) group by encounter.creator")
+return_visit={}
+for r in return_visit_raw:
+    name=" ".join(r['username'].split('.'))
+    return_visit[name]=r['number']
 
-
-
-
+aggregate={"timestamp": t,"initial":initial,"return":return_visit}
+collection=db_mongo.performance 
+print aggregate
+latest_date=datetime.datetime(1970,12,12)
+for entry in collection.find():
+    if entry["timestamp"]>latest_date:
+        latest_date=entry["timestamp"]
+if (aggregate["timestamp"]-latest_date).seconds>5*3600:# Have at least 12 hours between each update
+    collection.insert(aggregate)
+else:
+    print "already have a recent record"

@@ -1,0 +1,191 @@
+
+/* GLOBAL STYLES
+-------------------------------------------------- */
+/* Padding below the footer and lighter body text */
+
+body {
+  padding-bottom: 40px;
+  color: #5a5a5a;
+}
+
+/* TYPOGRAPHY
+-------------------------------------------------- */
+
+@font-face {
+    font-family: 'Titillium Semibold';
+    src: url('../fonts/titillium/titillium-semibold-webfont.eot');
+    src: url('../fonts/titillium/titillium-semibold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/titillium/titillium-semibold-webfont.woff') format('woff'),
+         url('../fonts/titillium/titillium-semibold-webfont.ttf') format('truetype'),
+         url('../fonts/titillium/titillium-semibold-webfont.svg#TitilliumBold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'Open Sans';
+    src: url('../fonts/opensans/OpenSans-Light-webfont.eot');
+    src: url('../fonts/opensans/OpenSans-Light-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/opensans/OpenSans-Light-webfont.woff') format('woff'),
+         url('../fonts/opensans/OpenSans-Light-webfont.ttf') format('truetype'),
+         url('../fonts/opensans/OpenSans-Light-webfont.svg#OpenSansLight') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'Open Sans';
+    src: url('../fonts/opensans/OpenSans-LightItalic-webfont.eot');
+    src: url('../fonts/opensans/OpenSans-LightItalic-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/opensans/OpenSans-LightItalic-webfont.woff') format('woff'),
+         url('../fonts/opensans/OpenSans-LightItalic-webfont.ttf') format('truetype'),
+         url('../fonts/opensans/OpenSans-LightItalic-webfont.svg#OpenSansLightItalic') format('svg');
+    font-weight: normal;
+    font-style: italic;
+
+}
+
+@font-face {
+    font-family: 'Open Sans';
+    src: url('../fonts/opensans/OpenSans-Regular-webfont.eot');
+    src: url('../fonts/opensans/OpenSans-Regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/opensans/OpenSans-Regular-webfont.woff') format('woff'),
+         url('../fonts/opensans/OpenSans-Regular-webfont.ttf') format('truetype'),
+         url('../fonts/opensans/OpenSans-Regular-webfont.svg#OpenSansRegular') format('svg');
+    font-weight: bold;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'Open Sans';
+    src: url('../fonts/opensans/OpenSans-Italic-webfont.eot');
+    src: url('../fonts/opensans/OpenSans-Italic-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/opensans/OpenSans-Italic-webfont.woff') format('woff'),
+         url('../fonts/opensans/OpenSans-Italic-webfont.ttf') format('truetype'),
+         url('../fonts/opensans/OpenSans-Italic-webfont.svg#OpenSansItalic') format('svg');
+    font-weight: bold;
+    font-style: italic;
+
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Titillium Semibold", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+body {
+  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+
+/* CUSTOMIZE THE NAVBAR
+-------------------------------------------------- */
+
+/* Special class on .container surrounding .navbar, used for positioning it into place. */
+.navbar-wrapper {
+  /*position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;*/
+  margin-top: 20px;
+}
+.navbar-wrapper .navbar {
+
+}
+
+/* Remove border and change up box shadow for more contrast */
+.navbar .navbar-inner {
+  border: 0;
+  -webkit-box-shadow: 0 2px 10px rgba(0,0,0,.25);
+     -moz-box-shadow: 0 2px 10px rgba(0,0,0,.25);
+          box-shadow: 0 2px 10px rgba(0,0,0,.25);
+}
+
+/* Downsize the brand/project name a bit */
+.navbar .brand {
+  /*padding: 14px 20px 16px; /* Increase vertical padding to match navbar links */
+  font-size: 16px;
+  font-weight: bold;
+  text-shadow: 0 -1px 0 rgba(0,0,0,.5);
+}
+
+.navbar .logo {
+  background:url('../img/logox2.png');
+  background-position: 5px 5px;
+  background-repeat: no-repeat;
+  background-size: 151px 35px;
+}
+
+.logo-image {
+  width: 151px;
+  height: 35px;
+}
+
+/* Navbar links: increase padding for taller navbar */
+.navbar .nav > li > a {
+  padding: 15px 20px;
+}
+
+/* Offset the responsive button for proper vertical alignment */
+.navbar .btn-navbar {
+  margin-top: 10px;
+}
+
+/* Big numbers overview
+-------------------------------------------------- */
+.dashnum {
+	text-align: center;
+	font-family: "Open Sans";
+	font-weight: bold;
+}
+
+/* Chart stuff
+-------------------------------------------------- */
+
+#enrolled_chart {
+	display: inline-block;
+}
+
+#chart {
+}
+
+#legend {
+	float: left;
+	margin-left: 15px;
+}
+
+#offset_form {
+	float: left;
+	margin: 2em 0 0 15px;
+	font-size: 13px;
+}
+
+#y_axis {
+	float: left;width: 40px;
+}
+
+#chart_nv svg {
+  height: 400px;
+}
+
+#chart_pie svg {
+	height: 400px;
+	width: 800px;
+}
+
+#line_chart svg {
+	height: 400px;
+}
+
+#bar_chart {
+	margin: 10px;
+	min-width: 100px;
+	min-height: 100px;
+}
+
+#bar_chart svg {
+	height: 500px;
+}

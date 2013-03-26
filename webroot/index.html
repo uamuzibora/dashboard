@@ -78,6 +78,18 @@
 		  height: 400px;
 		  width: 800px;
 		  }
+		  #line_chart svg {
+		  height: 400px;
+		  }
+		  #bar_chart {
+		  margin: 10px;
+		  min-width: 100px;
+		  min-height: 100px;
+
+		  }
+                  #bar_chart svg {
+		  height: 500px;
+		  }
 
 		</style>
 		
@@ -86,6 +98,12 @@
 		  <svg></svg>
 		</div>
 		<div id="chart_pie">
+		  <svg></svg>
+		</div>
+		<div id="line_chart">
+		  <svg></svg>
+		</div>
+		<div id="bar_chart">
 		  <svg></svg>
 		</div>
 
@@ -160,7 +178,14 @@
               var ps=extractTimeData(jdata,"patient_source",group="text")
               pie_chart(ps[latest_date_d.getTime()],"chart_pie")
 	      //timeline(enrolled_time,"enrolled_chart");
-	      timeline_nv(enrolled_time,"chart_nv");
+	      //get scaling for line chart
+              scaling=total_time_data(enrolled_time,1)
+              timeline_nv(enrolled_time,"chart_nv");
+	      var missing_data=extractTimeData(jdata,"missing",group="text")
+              missing_data_scaled=scale(missing_data,scaling,100,2)
+              missing_percent_change=percent_change(missing_data_scaled,1,"individual");
+              horizontal_bar_chart(missing_percent_change,"bar_chart")
+              line_chart(missing_data,"line_chart",scaling);
               $("#enrolled").html(table(jdata[latest_date]["enrolled"],false));
 	      $("#patient_source").html(table(jdata[latest_date]["patient_source"],true));
 	      $("#eligibility_for_art").html(table(jdata[latest_date]["eligible_no_art"],false));
@@ -177,6 +202,34 @@
 	  $(function () {
 	    $('#tablist a:first').tab('show');
 	  })
+        function scale(data,scaling,scale,level){
+            return_data={}
+            for(key in data){
+	    if(level==1){
+	      return_data[key]=data[key]/scaling[key]*scale
+            }if(level==2){
+              return_data[key]={}
+              for(key2 in data[key]){
+	          return_data[key][key2]=data[key][key2]/scaling[key]*scale
+              }
+            }
+            }
+            return return_data
+        }
+        function percent_change(data,level,which){
+            if(which=="total"){
+            data=total_time_data(data,level)
+            var keys=Object.keys(data)
+            return (data[keys[keys.length-1]]-data[keys[0]])/data[keys[0]]*100
+           }if(which=="individual"){
+            var keys=Object.keys(data)
+            return_data={}
+            for(key in data[keys[0]]){
+	        return_data[key]=(data[keys[keys.length-1]][key]-data[keys[0]][key])/data[keys[0]][key]*100
+            }
+            return return_data
+          }
+        }
         function extractTimeData(data,key,group){
            var keys=Object.keys(data);
 	   keys.sort();
@@ -223,7 +276,6 @@
                             for(var j=0;j<4;j++){
 	                       sum+=data[k][key][t][loc][j];
 	                    }
-                        }
                     timedata[date.getTime()][t]=sum;
                 }
 
@@ -233,14 +285,92 @@
           return timedata
 
         }
+        function total_time_data(data,level){
+	      ret_data={}
+              for(k in data){
+                  sum=0;
+                  for(l in data[k]){
+                  if (level==2){
+                     for(j in data[k][j]){
+                       sum+=data[k][l];
+                     }
+                  }else{
+                       sum+=data[k][l];
+                  }
+                  }
+	       ret_data[k]=sum
+              }
+             return ret_data
+        }
+        function line_chart(data,chart_id,scaling){
 
+           var timedata_t={}
+           keys=Object.keys(data)
+           locations=Object.keys(data[keys[keys.length-1]]);
+
+           max=0;
+           max_number=0;
+           for(var i=0;i<keys.length;i++){
+               locs=Object.keys(data[keys[i]]);
+               if (locs.length>max){
+                   max=locs.length
+                   max_number=i
+               }               
+           }
+           for(loc in data[keys[max_number]]){
+               timedata_t[loc]=[]
+           }
+           
+	   for(var i=0;i<keys.length;i++){
+               for(loc in data[keys[i]]){
+                     ar=data[keys[i]][loc]
+                     if(scaling){
+                     scale=scaling[keys[i]]/100.0
+                     }else{
+                     scale=1
+                     }                
+   
+	             timedata_t[loc].push([parseInt(keys[i]),data[keys[i]][loc]/scale]);
+                }
+	   }
+          var timedata=[];
+  
+         for(loc in timedata_t){
+	     timedata.push({"key":loc,"values":timedata_t[loc]})
+          }
+             nv.addGraph(function() {
+              var chart_line = nv.models.lineWithFocusChart()
+                 .x(function(d) { return d[0] })
+                 .y(function(d) { return d[1] });
+              chart_line.xAxis
+                .showMaxMin(false)
+                .tickFormat(function(d) { return d3.time.format('%x')(new Date(d)) });
+             chart_line.x2Axis
+		.showMaxMin(false)
+                .tickFormat(function(d) { return d3.time.format('%x')(new Date(d)) });
+
+             chart_line.yAxis
+               .tickFormat(d3.format(',.2f'));
+             chart_line.y2Axis
+              .tickFormat(d3.format(',.2f'));
+
+	    d3.select('#'+chart_id+' svg')
+            .datum(timedata)
+            .transition().duration(500)
+            .call(chart_line);
+
+            nv.utils.windowResize(chart_line.update);
+
+           return chart_line;
+          });
+
+     }
         function pie_chart(data,chart_id){
              datum=[]
              for(text in data){
 	          datum.push({"label":text,"value":parseInt(data[text])})
              }
              datum=[{"key":"Stuff","values":datum}]
-             alert(JSON.stringify(datum));
              nv.addGraph(function() {
                  var chart = nv.models.pieChart()
                 .x(function(d) { return d.label })
@@ -262,24 +392,34 @@
         function timeline_nv(data,chart_id){
            timedata_t={}
            keys=Object.keys(data)
-           alert(JSON.stringify(data));
            locations=Object.keys(data[keys[keys.length-1]]);
-           for(loc in data[keys[5]]){
+
+	   max=0;
+           max_number=0;
+           for(var i=0;i<keys.length;i++){
+               locs=Object.keys(data[keys[i]]);
+               if (locs.length>max){
+                   max=locs.length
+                   max_number=i
+               }               
+           }
+           for(loc in data[keys[max_number]]){
                timedata_t[loc]=[]
            }
-
 	   for(var i=0;i<keys.length;i++){
-                for(loc in data[keys[i]]){
-                     ar=data[keys[i]][loc]
+                for(loc in data[keys[max_number]]){
+                    if(loc in data[keys[i]]){
 	             timedata_t[loc].push([parseInt(keys[i]),data[keys[i]][loc]]);
+                    }else{
+      	             timedata_t[loc].push([parseInt(keys[i]),0]);
+                    }
                 }
 	   }
-          timedata=[];
+          var timedata=[];
           for(loc in timedata_t){
 	     timedata.push({"key":loc,"values":timedata_t[loc]})
           }
-          alert(JSON.stringify(timedata));
-	  nv.addGraph(function() {
+  	  nv.addGraph(function() {
              var chart = nv.models.stackedAreaChart()
              .x(function(d) { return d[0] })
              .y(function(d) { return d[1] })
@@ -302,6 +442,37 @@
 });
 
 
+        }
+
+        function horizontal_bar_chart(data,chart_id){
+             var datum=[{key:"Missing data",color: '#1f77b4',values:[]}]
+	     for(key in data){
+                 datum[0]["values"].push({"label":key,"value":data[key]})
+             }
+	     var chart;
+             nv.addGraph(function() {
+             chart = nv.models.multiBarHorizontalChart()
+                .x(function(d) { return d.label })
+                .y(function(d) { return d.value })
+                .margin({top: 30, right: 20, bottom: 50, left: 175})
+                .showValues(true)
+                .tooltips(false)
+                .showControls(false);
+
+            chart.yAxis
+                .tickFormat(d3.format(',.2f'));
+
+            d3.select('#'+chart_id+' svg')
+                .datum(datum)
+                .transition().duration(500)
+                .call(chart);
+
+            nv.utils.windowResize(chart.update);
+
+
+
+            return chart;
+           });
         }
 	</script>
 	<!-- End Javascript -->

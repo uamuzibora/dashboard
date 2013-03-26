@@ -33,6 +33,8 @@ def application(environ, start_response):
         end=datetime.datetime.strptime(end,"%d/%m/%Y")
         location=param.get('location',[''])[0]
         ret=get_data.report(start,end,location)
+    elif req_type=="performance":
+        ret=get_data.performance()
 
     return json.dumps(ret)
 

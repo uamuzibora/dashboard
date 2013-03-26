@@ -17,6 +17,18 @@ def dashboard(location):
         del entry["_id"]
     return data
 
+def performance():
+    connection=pymongo.MongoClient()
+    db=connection.openmrs_aggregation
+    db.authenticate(dbConfig.mongo_username,dbConfig.mongo_password)
+    collection=db.performance
+    data={}
+    for entry in collection.find():
+        data[entry["timestamp"].isoformat()]=entry
+        del entry["timestamp"]
+        del entry["_id"]
+    return data
+
 def report(start_date,end_date,location):
     connection=pymongo.MongoClient()
     db=connection.openmrs_aggregation
