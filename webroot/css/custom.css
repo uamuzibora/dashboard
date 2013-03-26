@@ -145,6 +145,10 @@ body {
 /* Chart stuff
 -------------------------------------------------- */
 
+.chart-header {
+  text-align: center;
+}
+
 .chart text {
   font-family: inherit;
   text-transform: uppercase;
