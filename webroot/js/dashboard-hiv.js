@@ -22,6 +22,8 @@
 										"patient_source",
 										group = "text")
 				
+				// Age & gender chart data
+
 
 				// *** PROGRAMME INDICATORS ***
 
@@ -99,6 +101,8 @@
 					timeline_nv(enrolled_time,"overview_timeline_chart");
 					// Patient source pie chart
 					pie_chart(ps[latest_date_d.getTime()],"overview_patient_source_chart");
+					// Age & gender pie chart
+					pie_chart(,"overview_age_gender_chart");
 
 				});
 
