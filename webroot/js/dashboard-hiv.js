@@ -95,18 +95,23 @@
 														group="location")
 				total_followed_up = total_time_data(followed_up_time,1)[latest_date_d.getTime()]
 				$('#lostPatientsFollowedUp').html('<h1 class="dashnum">' + addCommas(total_followed_up) + '</h1>');
-
-	    
-	    // Complete Records
-												
-	    complete_records_time=extractTimeData(jdata,
+				
+				// Complete Records
+				complete_records_time=extractTimeData(jdata,
 																"complete_records",
 																group="location")
-	    complete_records_total=total_time_data(complete_records_time,1)[latest_date_d.getTime()];
 
-	    complete_records_scaled=scale(total_time_data(complete_records_time,1),number_enrolled,100,1)
+				complete_records_total=total_time_data(complete_records_time,1)[latest_date_d.getTime()];
+
+				complete_records_scaled=scale(total_time_data(complete_records_time,1),number_enrolled,100,1)
 
 				percent_change_complete_records = percent_change(complete_records_scaled,1,"ready");
+				$('#completedRecords').html('<h1 class="dashnum">' + addCommas(complete_records_total) + '</h1>');
+				if (percent_change_complete_records > 0) {
+					$('#completedRecordsPercent').html('<h2 class="dashnum text-success">(+' + percent_change_complete_records + '%)</h2>');
+				} else {
+					$('#completedRecordsPercent').html('<h2 class="dashnum text-error">(+' + percent_change_complete_records + '%)</h2>');
+				}
 
 				// Last updated
 				$('#lastDate').html(latest_date_d.getDate()+'/'+latest_date_d.getMonth()+'/'+latest_date_d.getFullYear());
