@@ -145,36 +145,20 @@ body {
 /* Chart stuff
 -------------------------------------------------- */
 
-#enrolled_chart {
-	display: inline-block;
+.chart text {
+  font-family: inherit;
+  text-transform: uppercase;
 }
 
-#chart {
-}
-
-#legend {
-	float: left;
-	margin-left: 15px;
-}
-
-#offset_form {
-	float: left;
-	margin: 2em 0 0 15px;
-	font-size: 13px;
-}
-
-#y_axis {
-	float: left;width: 40px;
-}
-
-#chart_nv svg {
+.overview_timeline_chart svg {
   height: 400px;
 }
 
-#chart_pie svg {
-	height: 400px;
-	width: 800px;
+.pie_chart {
+  min-width: 400px;
+  min-height: 400px;
 }
+
 
 #line_chart svg {
 	height: 400px;

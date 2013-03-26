@@ -11,14 +11,17 @@
 				latest_date = keys[0]
 				latest_date_d = new Date(latest_date);
 
+
+				// Enrollment chart data
 				var enrolled_time = extractTimeData(jdata,
 												"enrolled",
 												group = "location")
+				
+				// Patient source chart data
 				var ps = extractTimeData(jdata,
 										"patient_source",
 										group = "text")
 				
-				//pie_chart(ps[latest_date_d.getTime()],"chart_pie")
 
 				// *** PROGRAMME INDICATORS ***
 
@@ -89,25 +92,21 @@
 				
 				// Timeline chart
 				scaling=total_time_data(enrolled_time,1) // Get scaling for line chart
-				timeline_nv(enrolled_time,"chart_nv");
+				//timeline_nv(enrolled_time,"overview_timeline_chart");
+				// Only render the chart when the tab is activated
+				$('a[href="#overview"]').on('show', function () {
+					// Enrollment timeline chart
+					timeline_nv(enrolled_time,"overview_timeline_chart");
+					// Patient source pie chart
+					pie_chart(ps[latest_date_d.getTime()],"overview_patient_source_chart");
+
+				});
 
 				// Missing data chart
 				var missing_data = extractTimeData(jdata,"missing",group="text")
 				missing_data_scaled = scale(missing_data,scaling,100,2)
 				missing_percent_change = percent_change(missing_data_scaled,1,"individual");
-				horizontal_bar_chart(missing_percent_change,"bar_chart")
-				line_chart(missing_data,"line_chart",scaling);
-				
-				/*
-				$("#enrolled").html(table(jdata[latest_date]["enrolled"],false));
-				$("#patient_source").html(table(jdata[latest_date]["patient_source"],true));
-				$("#eligibility_for_art").html(table(jdata[latest_date]["eligible_no_art"],false));
-				$("#who_on_art").html(table(jdata[latest_date]["on_art_who"],true));
-				$("#exciting_care").html(table(jdata[latest_date]["inactive_reason"],true));
-				$("#follow_up").html(table(jdata[latest_date]["reason_to_follow_up"],true));
-				$("#followed_up").html(table(jdata[latest_date]["followed_up"],false));      
-				$("#willing_to_return").html(table(jdata[latest_date]["willing_to_return"],false));
-				$("#missing_data").html(table(jdata[latest_date]["missing"],true));
-				*/
+				//horizontal_bar_chart(missing_percent_change,"bar_chart")
+				//line_chart(missing_data,"line_chart",scaling);
 			});
 		

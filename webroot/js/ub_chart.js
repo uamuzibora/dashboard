@@ -209,21 +209,21 @@ function pie_chart(data,chart_id){
 	    "label":text,
 	    "value":parseInt(data[text])
 	})
-    }
-    datum=[{
-	"key":"Stuff",
-	"values":datum
-    }]
+	}
+
     nv.addGraph(function() {
-	var chart = nv.models.pieChart()
-	    .x(function(d) { return d.label })
-	    .y(function(d) { return d.value })
-	    .showLabels(false);
-	
-	d3.select("#"+chart_id+" svg")
-	    .datum(datum)
+	chart = nv.models.pieChart()
+		.x(function(d) { return d.label })
+		.y(function(d) { return d.value })
+		.values(function(d) { return d })
+		.showLabels(false);
+
+	d3.select("#"+chart_id)
+	    .datum([datum])
 	    .transition().duration(1200)
 	    .call(chart);
+
+	nv.utils.windowResize(chart.update);
 	
 	return chart;
     });
@@ -259,11 +259,11 @@ function timeline_nv(data,chart_id){
 	timedata.push({"key":loc,"values":timedata_t[loc]})
     }
     
-    nv.addGraph(function() {
+    nv.addGraph(function() {	
 	var chart = nv.models.stackedAreaChart()
 	    .x(function(d) { return d[0] })
 	    .y(function(d) { return d[1] })
-	    .clipEdge(true);
+	    //.clipEdge(true);
 	
 	chart.xAxis
 	    .showMaxMin(false)
@@ -276,8 +276,7 @@ function timeline_nv(data,chart_id){
 	    .datum(timedata)
 	    .transition().duration(500).call(chart);
 	
-	//nv.utils.windowResize(chart.update);
-	
+	nv.utils.windowResize(chart.update);
 	return chart;
     });
 }
@@ -315,7 +314,7 @@ function horizontal_bar_chart(data,chart_id){
 	    .transition().duration(500)
 	    .call(chart);
 	
-	nv.utils.windowResize(chart.update);
+	//nv.utils.windowResize(chart.update);
 	
 	return chart;
     });
