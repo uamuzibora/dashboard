@@ -42,6 +42,8 @@ function table(data,location){
 };
 
 function scale(data,scaling,scale,level){
+//    alert(JSON.stringify(data))
+//    alert(JSON.stringify(scaling))
     return_data = {}
     for(key in data){
 	if (level == 1){
@@ -58,6 +60,12 @@ function scale(data,scaling,scale,level){
 }
 
 function percent_change(data,level,which){
+    if(which == "ready"){
+	var keys = Object.keys(data)
+	keys.sort();
+	return Math.round((data[keys[keys.length - 1]] - data[keys[0]]) / data[keys[0]] * 100)
+    }
+
     if(which == "total"){
 	data = total_time_data(data,level)
 	var keys = Object.keys(data)
@@ -267,7 +275,7 @@ function timeline_nv(data,chart_id){
 	
 	chart.xAxis
 	    .showMaxMin(false)
-	    .tickFormat(function(d) { return d3.time.format('%d/%m/%Y')(new Date(d)) });
+	    .tickFormat(function(d) { return d3.time.format('%x')(new Date(d)) });
 	
 	chart.yAxis
 	    .tickFormat(d3.format(',.2f'));

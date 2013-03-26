@@ -55,7 +55,13 @@
 																"eligible_no_art",
 																group="location")
 				total_eligible_not_on_art = total_time_data(eligible_not_on_art_time,1)[latest_date_d.getTime()]
-				percent_change_eligible_not_on_art = percent_change(eligible_not_on_art_time,1,"total");
+	    total_eligible_time=extractTimeData(jdata,
+																"eligible_for_art",
+																group="location")
+	    eligible_time=total_time_data(total_eligible_time,1)
+	    eligible_not_on_art_scaled=scale(total_time_data(eligible_not_on_art_time,1),eligible_time,100,1)
+				percent_change_eligible_not_on_art = percent_change(eligible_not_on_art_scaled,1,"ready");
+
 				$('#eligibleNotOnArt').html('<h1 class="dashnum">' + addCommas(total_eligible_not_on_art) + '</h1>');
 				if (percent_change_eligible_not_on_art > 0) {
 					$('#eligibleNotOnArtPercent').html('<h2 class="dashnum text-error">(+' + percent_change_eligible_not_on_art + '%)</h2>');
@@ -72,7 +78,10 @@
 					lost_to_followup_time[key] = exit_care_time[key]["LOST TO FOLLOWUP"]
 				}
 				total_lost_to_followup = lost_to_followup_time[latest_date_d.getTime()];
-				percent_change_lost_to_followup = Math.round((lost_to_followup_time[latest_date_d.getTime()] - lost_to_followup_time[first_date_d.getTime()]) / lost_to_followup_time[first_date_d.getTime()] * 100)
+	    number_enrolled=total_time_data(enrolled_time,1)
+	    lost_to_followup_scaled = scale(lost_to_followup_time,number_enrolled,100,1)
+
+				percent_change_lost_to_followup = percent_change(lost_to_followup_scaled,1,"ready")
 				$('#lostToFollowup').html('<h1 class="dashnum">' + addCommas(total_lost_to_followup) + '</h1>');
 				if (percent_change_lost_to_followup > 0) {
 					$('#lostToFollowupPercent').html('<h2 class="dashnum text-error">(+' + percent_change_lost_to_followup + '%)</h2>');
@@ -86,6 +95,18 @@
 														group="location")
 				total_followed_up = total_time_data(followed_up_time,1)[latest_date_d.getTime()]
 				$('#lostPatientsFollowedUp').html('<h1 class="dashnum">' + addCommas(total_followed_up) + '</h1>');
+
+	    
+	    // Complete Records
+												
+	    complete_records_time=extractTimeData(jdata,
+																"complete_records",
+																group="location")
+	    complete_records_total=total_time_data(complete_records_time,1)[latest_date_d.getTime()];
+
+	    complete_records_scaled=scale(total_time_data(complete_records_time,1),number_enrolled,100,1)
+
+				percent_change_complete_records = percent_change(complete_records_scaled,1,"ready");
 
 				// Last updated
 				$('#lastDate').html(latest_date_d.getDate()+'/'+latest_date_d.getMonth()+'/'+latest_date_d.getFullYear());
