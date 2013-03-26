@@ -267,7 +267,7 @@ function timeline_nv(data,chart_id){
 	
 	chart.xAxis
 	    .showMaxMin(false)
-	    .tickFormat(function(d) { return d3.time.format('%x')(new Date(d)) });
+	    .tickFormat(function(d) { return d3.time.format('%d/%m/%Y')(new Date(d)) });
 	
 	chart.yAxis
 	    .tickFormat(d3.format(',.2f'));

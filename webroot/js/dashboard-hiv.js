@@ -102,7 +102,7 @@
 					// Patient source pie chart
 					pie_chart(ps[latest_date_d.getTime()],"overview_patient_source_chart");
 					// Age & gender pie chart
-					pie_chart(,"overview_age_gender_chart");
+					//pie_chart(,"overview_age_gender_chart");
 
 				});
 
