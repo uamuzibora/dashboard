@@ -147,13 +147,11 @@
 	    //First WHO Stage
 	    who=jdata[latest_date]["first_who"]
 	    first_who_age_gender={}
-	    alert(JSON.stringify(who));
 	    for (key in who){
 		if(key!="Missing" && key!="WHO STAGE MISSING"){
 		    first_who_age_gender[key]={"Male < 14":0,"Female < 14":0,"Male > 14":0,"Female > 14":0}
 		}
 	    }
-	   
 	    for(key in who){
 		if(key!="Missing" && key!="WHO STAGE MISSING"){
 		    for(loc in who[key]){
@@ -166,13 +164,32 @@
 	    }
 //	    multi_bar_chart(first_who_age_gender,"chart_id")
 	    
-				
+	    //On ART TIMELINE
+	    
+	    on_art_who_stage_time=extractTimeData(jdata,"on_art_who",group="text")
+	    
+	    for(time in on_art_who_stage_time){
+		if ("WHO STAGE MISSING" in on_art_who_stage_time[time]){
+		    on_art_who_stage_time[time]["WHO STAGE MISSING"]+=on_art_who_stage_time[time]["Missing"]
+		}else{
+		    on_art_who_stage_time[time]["WHO STAGE MISSING"]=on_art_who_stage_time[time]["Missing"]
+		}
+		delete on_art_who_stage_time[time]["Missing"]
+	    }
+	    //timeline_nv(on_art_who_stage_time,"overview_timeline_chart",'Date','Patients');
+
+	    //Eligible not on art timeline
+	    eligible_no_art_time=extractTimeData(jdata,"eligible_no_art",group="location")
+	    alert(JSON.stringify(eligible_time))
+	    eligible_no_art_percent_time=scale(eligible_no_art_time,eligible_time,100,2)
+	    //timeline_nv(eligible_no_art_percent_time,"overview_timeline_chart",'Date','Patients');
 				// Timeline chart
 				scaling=total_time_data(enrolled_time,1) // Get scaling for line chart
 				//timeline_nv(enrolled_time,"overview_timeline_chart");
 				// Only render the chart when the tab is activated
 				$('a[href="#overview"]').on('show', function () {
 					// Enrollment timeline chart
+				        
 					timeline_nv(enrolled_time,"overview_timeline_chart",'Date','Patients');
 					// Patient source pie chart
 					pie_chart(ps[latest_date_d.getTime()],"overview_patient_source_chart");

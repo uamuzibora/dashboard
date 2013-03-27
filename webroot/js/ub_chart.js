@@ -42,8 +42,8 @@ function table(data,location){
 };
 
 function scale(data,scaling,scale,level){
-//    alert(JSON.stringify(data))
-//    alert(JSON.stringify(scaling))
+    // alert(JSON.stringify(data))
+    //alert(JSON.stringify(scaling))
     return_data = {}
     for(key in data){
 	if (level == 1){
@@ -55,6 +55,7 @@ function scale(data,scaling,scale,level){
 		return_data[key][key2] = data[key][key2] / scaling[key] * scale
 	    }
 	}
+
     }
     return return_data
 }
@@ -111,6 +112,23 @@ function extractTimeData(data,key,group){
 		timedata[date.getTime()][loc] = sum;
 	    }
 	}
+    }
+   if (group == "location_text"){
+       for (var i=0; i < keys.length; i++){
+	   k = keys[i];
+	   var date = new Date(k);
+	   timedata[date.getTime()] = {}
+	   inner_keys=Object.keys(data[k])
+	   for(loc in data[k][inner_keys[0]]){
+	       for(var t in data[k]){
+		   var sum = 0;
+    		   for(var j = 0 ; j < 4 ; j++){
+    		       sum += data[k][t][loc][j];
+    		   }
+    	       }
+    	       timedata[date.getTime()][loc]=sum;	       
+	   }
+       }
     }
     if (group == "text"){
 	for (var i=0; i < keys.length; i++){
