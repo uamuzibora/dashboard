@@ -237,6 +237,7 @@
 					horizontal_bar_chart(missing_fractional_change,"data_missing_parameters_chart",'Parameter','Percentage Change')
 				});
 				$('a[href="#clinical"]').on('show', function () {
+					console.log(on_art_who_stage_time);
 					timeline_nv(on_art_who_stage_time,"clinical_on_art_by_who_stage_timeline_chart",'Date','Patients');
 					percentage_timeline_nv(eligible_no_art_percent_time,"clinical_eligible_not_on_art_timeline_chart",'Date','Patients');
 					multi_bar_chart(first_who_age_gender,"clinical_initial_who_multibar_chart");
