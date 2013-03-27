@@ -336,8 +336,6 @@ function horizontal_bar_chart(data,chart_id,xAxisLabel,yAxisLabel){
 	    .tooltips(true)
 	    .showControls(false)
 	    .forceY([-1,1]);
-	
-
 
 	chart.yAxis
 	    .axisLabel(yAxisLabel)
@@ -367,7 +365,7 @@ function addCommas(nStr) {
 }
 
 function multi_bar_chart(data,chart_id){
-    datum=[]
+    var datum=[]
     for(text in data){
 	var tmp=[]
 	for (value in data[text]){
@@ -389,7 +387,7 @@ function multi_bar_chart(data,chart_id){
   //          .tickFormat(d3.format(',f'));
 	
 	chart.yAxis
-            .tickFormat(d3.format(',.1f'));
+	    .tickFormat(d3.format('n'));
 	
 	d3.select('#'+chart_id)
             .datum(datum)
