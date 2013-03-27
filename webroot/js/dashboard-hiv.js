@@ -174,13 +174,10 @@
 					}
 					delete on_art_who_stage_time[time]["Missing"]
 				}
-				//timeline_nv(on_art_who_stage_time,"overview_timeline_chart",'Date','Patients');
 				
 				//Eligible not on art timeline
 				eligible_no_art_time=extractTimeData(jdata,"eligible_no_art",group="location")
-				eligible_no_art_percent_time=scale(eligible_no_art_time,eligible_time,100,2)
-
-				//timeline_nv(eligible_no_art_percent_time,"overview_timeline_chart",'Date','Patients');
+				eligible_no_art_percent_time=scale(eligible_no_art_time,eligible_time,1,2)
 
 				// Timeline chart
 				scaling=total_time_data(enrolled_time,1) // Get scaling for line chart
@@ -203,9 +200,9 @@
 					horizontal_bar_chart(missing_fractional_change,"data_missing_parameters_chart",'Parameter','Percentage Change')
 				});
 				$('a[href="#clinical"]').on('show', function () {
-					// Initial WHO stage timeline chart
+					timeline_nv(on_art_who_stage_time,"clinical_on_art_by_who_stage_timeline_chart",'Date','Patients');
+					percentage_timeline_nv(eligible_no_art_percent_time,"clinical_eligible_not_on_art_timeline_chart",'Date','Patients');
 					multi_bar_chart(first_who_age_gender,"clinical_initial_who_multibar_chart");
-					console.log(cd4_age_gender);
 					multi_bar_chart(cd4_age_gender,"clinical_initial_cd4_multibar_chart");
 				});
 				// Missing data chart

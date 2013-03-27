@@ -163,6 +163,9 @@ body {
   min-height: 400px;
 }
 
+.bar-chart {
+  height: 300px;
+}
 
 #line_chart svg {
 	height: 400px;

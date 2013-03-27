@@ -275,13 +275,13 @@ function pie_chart(data,chart_id){
 }
 
 function timeline_nv(data,chart_id,xAxisLabel,yAxisLabel){
-    timedata_t = {}
-    keys = Object.keys(data)
-    locations = Object.keys(data[keys[keys.length - 1]]);
-    max = 0;
-    max_number = 0;
+    var timedata_t = {}
+    var keys = Object.keys(data)
+    var locations = Object.keys(data[keys[keys.length - 1]]);
+    var max = 0;
+    var max_number = 0;
     for (var i = 0; i < keys.length; i++){
-		locs = Object.keys(data[keys[i]]);
+		var locs = Object.keys(data[keys[i]]);
 	if (locs.length > max){
 			max = locs.length
 	    max_number = i
@@ -318,7 +318,64 @@ function timeline_nv(data,chart_id,xAxisLabel,yAxisLabel){
 	
 	chart.yAxis
 	    .axisLabel(yAxisLabel)
+	    .showMaxMin(false)
 	    .tickFormat(d3.format('n'));
+	
+	d3.select("#"+chart_id+' svg')
+	    .datum(timedata)
+	    .transition().duration(500).call(chart);
+	
+	nv.utils.windowResize(chart.update);
+	return chart;
+    });
+}
+
+function percentage_timeline_nv(data,chart_id,xAxisLabel,yAxisLabel){
+    var timedata_t = {}
+    var keys = Object.keys(data)
+    var locations = Object.keys(data[keys[keys.length - 1]]);
+    var max = 0;
+    var max_number = 0;
+    for (var i = 0; i < keys.length; i++){
+		var locs = Object.keys(data[keys[i]]);
+	if (locs.length > max){
+			max = locs.length
+	    max_number = i
+	}	
+    }
+    for (loc in data[keys[max_number]]){
+	timedata_t[loc] = []
+    }
+    for (var i = 0; i < keys.length; i++){
+	for (loc in data[keys[max_number]]){
+	    if (loc in data[keys[i]]){
+		timedata_t[loc].push([parseInt(keys[i]),data[keys[i]][loc]]);
+	    } else {
+		timedata_t[loc].push([parseInt(keys[i]),0]);
+			}
+	}
+    }
+    var timedata = [];
+    for (loc in timedata_t){
+	timedata.push({"key":loc,"values":timedata_t[loc]})
+    }
+    
+    nv.addGraph(function() {	
+	var chart = nv.models.stackedAreaChart()
+	    .x(function(d) { return d[0] })
+	    .y(function(d) { return d[1] })
+	    .clipEdge(true)
+	    .showControls(false);
+	
+	chart.xAxis
+	    .showMaxMin(false)
+	    .axisLabel(xAxisLabel)
+	    .tickFormat(function(d) { return d3.time.format('%e %b %Y')(new Date(d)) });
+	
+	chart.yAxis
+	    .axisLabel(yAxisLabel)
+	    .showMaxMin(false)
+	    .tickFormat(d3.format('p'));
 	
 	d3.select("#"+chart_id+' svg')
 	    .datum(timedata)
@@ -405,7 +462,8 @@ function multi_bar_chart(data,chart_id){
   //          .tickFormat(d3.format(',f'));
 	
 	chart.yAxis
-	    .tickFormat(d3.format('n'));
+	    .tickFormat(d3.format('n'))
+	    .showMaxMin(false);
 	
 	d3.select('#'+chart_id)
             .datum(datum)
