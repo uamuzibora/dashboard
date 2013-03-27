@@ -163,6 +163,25 @@
 					}
 				}
 				
+				//On ART TIMELINE
+				on_art_who_stage_time=extractTimeData(jdata,"on_art_who",group="text")
+
+				for(time in on_art_who_stage_time){
+					if ("WHO STAGE MISSING" in on_art_who_stage_time[time]){
+						on_art_who_stage_time[time]["WHO STAGE MISSING"]+=on_art_who_stage_time[time]["Missing"]
+					}else{
+						on_art_who_stage_time[time]["WHO STAGE MISSING"]=on_art_who_stage_time[time]["Missing"]
+					}
+					delete on_art_who_stage_time[time]["Missing"]
+				}
+				//timeline_nv(on_art_who_stage_time,"overview_timeline_chart",'Date','Patients');
+				
+				//Eligible not on art timeline
+				eligible_no_art_time=extractTimeData(jdata,"eligible_no_art",group="location")
+				eligible_no_art_percent_time=scale(eligible_no_art_time,eligible_time,100,2)
+
+				//timeline_nv(eligible_no_art_percent_time,"overview_timeline_chart",'Date','Patients');
+
 				// Timeline chart
 				scaling=total_time_data(enrolled_time,1) // Get scaling for line chart
 				
@@ -170,6 +189,7 @@
 				// Only render the chart when the tab is activated
 				$('a[href="#overview"]').on('show', function () {
 					// Enrollment timeline chart
+				        
 					timeline_nv(enrolled_time,"overview_timeline_chart",'Date','Patients');
 					// Patient source pie chart
 					pie_chart(ps[latest_date_d.getTime()],"overview_patient_source_chart");
