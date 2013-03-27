@@ -58,9 +58,6 @@
 					<li>
 						<a href="#followup" data-toggle="tab">Follow Up</a>
 					</li>
-					<li>
-						<a href="#performance" data-toggle="tab">Performance</a>
-					</li>
 				</ul>
 			</div>
 		</div>
@@ -103,7 +100,7 @@
 								<p class="small muted">Patients who have been contacted or traced having been previously lost to follow up</p>
 							</div>
 							<div class="span3 well well-small">
-								<h3>Completed Records</h3>
+								<h3>Complete Records</h3>
 								<div id="completedRecords"></div>
 								<div id="completedRecordsPercent"></div>
 								<p class="small muted">Records with all four core parameters</p>
@@ -189,15 +186,39 @@
 						</div>
 					</div>
 					<div class="tab-pane" id="followup">
-						<p>Followup</p>
-					</div>
-					<div class="tab-pane" id="performance">
-						<p>Performance</p>
+						<div class="row">
+							<div class="span12">
+								<h2 class="chart-header">Patients exited care over time</h2>
+								<div id="followup_exit_timeline_chart" class="data_missing_chart chart">
+									<svg></svg>
+								</div>
+							</div>
+						</div>
+						<hr>
+						<div class="row">
+							<div class="span12">
+								<h2 class="chart-header">Patiets lost to follow up willing to return over time</h2>
+								<div id="followup_return_timeline_chart" class="data_missing_chart chart">
+									<svg></svg>
+								</div>
+							</div>
+						</div>
+						<hr>
+						<div class="row">
+							<div class="span6">
+								<h2 class="chart-header">Patients followed up</h2>
+									<svg id="followup_age_gender_chart" class="pie-chart chart"></svg>
+							</div>
+							<div class="span6">
+								<h2 class="chart-header">Reasons lost to follow up</h2>
+									<svg id="followup_reason_lost_chart" class="pie-chart chart"></svg>
+							</div>
+						</div>
 					</div>
 			</div>
 		</div>
 	</div>
-	</div>
+	
 	<!-- Le Javascript at the bottom for speediness -->
 	<script src="js/jquery.min.js"></script>
 	<script src="js/bootstrap.js"></script>

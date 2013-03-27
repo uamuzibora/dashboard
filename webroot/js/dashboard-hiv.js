@@ -144,6 +144,7 @@
 					}
 				}
 
+
 				//First WHO Stage
 				who=jdata[latest_date]["first_who"]
 				first_who_age_gender={}
@@ -182,8 +183,6 @@
 	    //Charts for Follow-up 
 	    //Timeline for lost to follow-up
 	    
-	    //timeline_nv(exit_care_time,"chart_id",'Date','Patients');
-	    
 	    //Pie chart Followed UP
 	    followed_up=jdata[latest_date]["followed_up"]
 
@@ -195,12 +194,10 @@
 		followed_up_age_gender["Male > 14"]+=followed_up[loc][2]
 		followed_up_age_gender["Female > 14"]+=followed_up[loc][3]
 	    }
-	    //pie_chart(followed_up_age_gender,"chart_id");
 
 	    //Reason lost to follow-up pie chart
 	    reason_lost=extractTimeData(jdata,"reason_to_follow_up",group="text")[latest_date_d.getTime()]
 	    delete reason_lost["Missing"]
-	    //pie_chart(reason_lost,"chart_id");
 	    
 	    //Willing to Return timline
 
@@ -219,9 +216,7 @@
 		    t["Female > 14"]+=willing_to_return_time[time][loc][3]
 		}
 		willing_to_return_age_gender[time]=t
-	    }
-
-	    //timeline_nv(willing_to_return_age_gender,"chart_id",'Date','Patients');
+		}
 				// Timeline chart
 				scaling=total_time_data(enrolled_time,1) // Get scaling for line chart
 				
@@ -246,6 +241,12 @@
 					percentage_timeline_nv(eligible_no_art_percent_time,"clinical_eligible_not_on_art_timeline_chart",'Date','Patients');
 					multi_bar_chart(first_who_age_gender,"clinical_initial_who_multibar_chart");
 					multi_bar_chart(cd4_age_gender,"clinical_initial_cd4_multibar_chart");
+				});
+				$('a[href="#followup"]').on('show', function () {
+					timeline_nv(exit_care_time,"followup_exit_timeline_chart",'Date','Patients');
+					timeline_nv(willing_to_return_age_gender,"followup_return_timeline_chart",'Date','Patients');
+					pie_chart(followed_up_age_gender,"followup_age_gender_chart");
+					pie_chart(reason_lost,"followup_reason_lost_chart");
 				});
 				// Missing data chart
 				var missing_data = extractTimeData(jdata,"missing",group="text")
