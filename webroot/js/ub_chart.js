@@ -339,8 +339,6 @@ function horizontal_bar_chart(data,chart_id,xAxisLabel,yAxisLabel){
 	    .forceY([-1,1]);
 	
 
-	chart.xAxis
-	    .axisLabel(xAxisLabel)
 
 	chart.yAxis
 	    .axisLabel(yAxisLabel)
