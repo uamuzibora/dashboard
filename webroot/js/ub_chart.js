@@ -169,7 +169,7 @@ function line_chart(data,chart_id,scaling,xAxisLabel,yAxisLabel){
 	for (loc in data[keys[i]]){
 	    ar = data[keys[i]][loc]
 	    if (scaling){
-		scale = scaling[keys[i]] / 100.0
+		scale = scaling[keys[i]]
 	    } else {
 		scale = 1
 	    }
@@ -191,8 +191,8 @@ function line_chart(data,chart_id,scaling,xAxisLabel,yAxisLabel){
 	    .axisLabel(xAxisLabel)
 
 	chart_line.yAxis
-	    .tickFormat(d3.format(',.2f'));
 	    .axisLabel(yAxisLabel)
+	    .tickFormat(d3.format('p'));
 	
 
 	d3.select('#'+chart_id+' svg')
@@ -317,8 +317,8 @@ function horizontal_bar_chart(data,chart_id,xAxisLabel,yAxisLabel){
 	    .axisLabel(xAxisLabel)
 
 	chart.yAxis
-	    .tickFormat(d3.format(',.2f'));
 	    .axisLabel(yAxisLabel)
+	    .tickFormat(d3.format('p'));
 	
 	d3.select('#'+chart_id+' svg')
 	    .datum(datum)
