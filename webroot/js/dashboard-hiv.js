@@ -127,7 +127,6 @@
 		age_gender["Male > 14"]+=current_enrolled[loc][2]
 		age_gender["Female > 14"]+=current_enrolled[loc][3]
 	    }
-	    //pie_chart(age_gender,"chart_id");
 	    
 	    //First CD4
 	    cd4=jdata[latest_date]["first_cd4"]
@@ -147,7 +146,6 @@
 	    //First WHO Stage
 	    who=jdata[latest_date]["first_who"]
 	    first_who_age_gender={}
-	    alert(JSON.stringify(who));
 	    for (key in who){
 		if(key!="Missing" && key!="WHO STAGE MISSING"){
 		    first_who_age_gender[key]={"Male < 14":0,"Female < 14":0,"Male > 14":0,"Female > 14":0}
@@ -177,7 +175,7 @@
 					// Patient source pie chart
 					pie_chart(ps[latest_date_d.getTime()],"overview_patient_source_chart");
 					// Age & gender pie chart
-					//pie_chart(,"overview_age_gender_chart");
+					pie_chart(age_gender,"overview_age_gender_chart");
 
 				});
 				$('a[href="#data"]').on('show', function () {

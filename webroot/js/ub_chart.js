@@ -231,16 +231,15 @@ function line_chart(data,chart_id,scaling,xAxisLabel,yAxisLabel){
 }
 
 function pie_chart(data,chart_id){
-    datum=[]
+    var datum=[]
     for(text in data){
 	datum.push({
 	    "label":text,
 	    "value":parseInt(data[text])
 	})
 	}
-
     nv.addGraph(function() {
-	chart = nv.models.pieChart()
+	var chart = nv.models.pieChart()
 		.x(function(d) { return d.label })
 		.y(function(d) { return d.value })
 		.values(function(d) { return d })
