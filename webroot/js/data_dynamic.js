@@ -7,8 +7,6 @@ function data(){
 	   },
 	   function(data,status){
 	       jdata=jQuery.parseJSON(data);
-	       alert("hei")
-	       alert(jdata)
 	   })
 	.done(function(){load_numbers()});
     return jdata

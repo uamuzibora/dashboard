@@ -1,8 +1,4 @@
 jdata=data();
-alert(JSON.stringify(jdata))
-
-
-	
 $(document).ready(function(){
 	 //   	jdata=data();
     load_numbers()
@@ -259,6 +255,6 @@ function load_numbers(){
     var missing_data = extractTimeData(jdata,"missing",group="text")
     missing_data_scaled = scale(missing_data,scaling,100,2)
     missing_fractional_change = fractional_change(missing_data_scaled,1,"individual");
-});
+}
 
 

@@ -368,9 +368,9 @@ function percentage_timeline_nv(data,chart_id,xAxisLabel,yAxisLabel){
 	    .y(function(d) { return d[1] })
 	    .clipEdge(true)
 	    .tooltip(function(key, x, y, e, graph) {
-        return '<h3>' + key + '</h3>' +
-               '<p>' +  Math.round(parseFloat(y)) + '% on ' + x + '</p>'
-      })
+		return '<h3>' + key + '</h3>' +
+		    '<p>' + Math.round(parseFloat(y)) + '% on ' + x + '</p>'
+	    })
 	    .showControls(false);
 	
 	chart.xAxis
@@ -418,9 +418,9 @@ function horizontal_bar_chart(data,chart_id,xAxisLabel,yAxisLabel){
 	    .showControls(false)
 	    .showLegend(false)
 	    .tooltip(function(key, x, y, e, graph) {
-        return '<h3>' + key + '</h3>' +
-               '<p>' +  Math.round(parseFloat(y)) + '% on ' + x + '</p>'
-      })
+		return '<h3>' + key + '</h3>' +
+		    '<p>' + Math.round(parseFloat(y)) + '% on ' + x + '</p>'
+	    })
 	    .forceY([-1,1]);
 
 	chart.yAxis
