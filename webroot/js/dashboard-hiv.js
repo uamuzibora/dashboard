@@ -135,12 +135,12 @@
 					// Missing data over time chart
 					line_chart(missing_data,"data_missing_chart",scaling,'Date','Incomplete Records');
 					// Missing core parameters chart
-					horizontal_bar_chart(missing_percent_change,"data_missing_parameters_chart",'Percentage Change','Core Parameter')
+					horizontal_bar_chart(missing_fractional_change,"data_missing_parameters_chart",'Parameter','Percentage Change')
 				});
 
 				// Missing data chart
 				var missing_data = extractTimeData(jdata,"missing",group="text")
 				missing_data_scaled = scale(missing_data,scaling,100,2)
-				missing_percent_change = percent_change(missing_data_scaled,1,"individual");
+				missing_fractional_change = fractional_change(missing_data_scaled,1,"individual");
 			});
 		

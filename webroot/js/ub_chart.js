@@ -81,6 +81,28 @@ function percent_change(data,level,which){
     }
 }
 
+function fractional_change(data,level,which){
+    if(which == "ready"){
+	var keys = Object.keys(data)
+	keys.sort();
+	return (data[keys[keys.length - 1]] - data[keys[0]]) / data[keys[0]]
+    }
+
+    if(which == "total"){
+	data = total_time_data(data,level)
+	var keys = Object.keys(data)
+	return (data[keys[keys.length - 1]] - data[keys[0]]) / data[keys[0]]
+    }
+    if (which == "individual"){
+	var keys = Object.keys(data)
+	return_data = {}
+	for(key in data[keys[0]]){
+	    return_data[key] = (data[keys[keys.length - 1]][key] - data[keys[0]][key]) / data[keys[0]][key]
+	}
+	return return_data
+    }
+}
+
 function extractTimeData(data,key,group){
     var keys = Object.keys(data);
     keys.sort();
@@ -183,7 +205,8 @@ function line_chart(data,chart_id,scaling,xAxisLabel,yAxisLabel){
     nv.addGraph(function() {
 	var chart_line = nv.models.lineChart()
 	    .x(function(d) { return d[0] })
-	    .y(function(d) { return d[1] });
+	    .y(function(d) { return d[1] })
+	    .forceY([0,1]);
 	
 	chart_line.xAxis
 	    .showMaxMin(false)
@@ -312,7 +335,8 @@ function horizontal_bar_chart(data,chart_id,xAxisLabel,yAxisLabel){
 	    })
 	    .showValues(false)
 	    .tooltips(true)
-	    .showControls(false);
+	    .showControls(false)
+	    .forceY([-1,1]);
 	
 
 	chart.xAxis
