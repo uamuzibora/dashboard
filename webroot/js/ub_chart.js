@@ -192,6 +192,7 @@ function line_chart(data,chart_id,scaling,xAxisLabel,yAxisLabel){
 
 	chart_line.yAxis
 	    .axisLabel(yAxisLabel)
+	    .showMaxMin(false)
 	    .tickFormat(d3.format('p'));
 	
 
@@ -267,7 +268,8 @@ function timeline_nv(data,chart_id,xAxisLabel,yAxisLabel){
 	var chart = nv.models.stackedAreaChart()
 	    .x(function(d) { return d[0] })
 	    .y(function(d) { return d[1] })
-	    .clipEdge(true);
+	    .clipEdge(true)
+	    .showControls(false);
 	
 	chart.xAxis
 	    .showMaxMin(false)
@@ -275,8 +277,8 @@ function timeline_nv(data,chart_id,xAxisLabel,yAxisLabel){
 	    .tickFormat(function(d) { return d3.time.format('%e %b %Y')(new Date(d)) });
 	
 	chart.yAxis
-	    .tickFormat(d3.format(',.2f'));
 	    .axisLabel(yAxisLabel)
+	    .tickFormat(d3.format('n'));
 	
 	d3.select("#"+chart_id+' svg')
 	    .datum(timedata)
@@ -308,8 +310,8 @@ function horizontal_bar_chart(data,chart_id,xAxisLabel,yAxisLabel){
 		bottom: 50,
 		left: 175
 	    })
-	    .showValues(true)
-	    .tooltips(false)
+	    .showValues(false)
+	    .tooltips(true)
 	    .showControls(false);
 	
 
