@@ -271,7 +271,7 @@ function timeline_nv(data,chart_id){
 	var chart = nv.models.stackedAreaChart()
 	    .x(function(d) { return d[0] })
 	    .y(function(d) { return d[1] })
-	    //.clipEdge(true);
+	    .clipEdge(true);
 	
 	chart.xAxis
 	    .showMaxMin(false)
@@ -322,7 +322,7 @@ function horizontal_bar_chart(data,chart_id){
 	    .transition().duration(500)
 	    .call(chart);
 	
-	//nv.utils.windowResize(chart.update);
+	nv.utils.windowResize(chart.update);
 	
 	return chart;
     });

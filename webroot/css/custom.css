@@ -154,7 +154,7 @@ body {
   text-transform: uppercase;
 }
 
-.overview_timeline_chart svg {
+.overview_timeline_chart, .data_missing_chart svg {
   height: 400px;
 }
 

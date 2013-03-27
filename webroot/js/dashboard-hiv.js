@@ -131,12 +131,16 @@
 					//pie_chart(,"overview_age_gender_chart");
 
 				});
+				$('a[href="#data"]').on('show', function () {
+					// Missing data over time chart
+					line_chart(missing_data,"data_missing_chart",scaling);
+					// Missing core parameters chart
+					horizontal_bar_chart(missing_percent_change,"data_missing_parameters_chart")
+				});
 
 				// Missing data chart
 				var missing_data = extractTimeData(jdata,"missing",group="text")
 				missing_data_scaled = scale(missing_data,scaling,100,2)
 				missing_percent_change = percent_change(missing_data_scaled,1,"individual");
-				//horizontal_bar_chart(missing_percent_change,"bar_chart")
-				//line_chart(missing_data,"line_chart",scaling);
 			});
 		
