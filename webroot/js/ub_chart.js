@@ -339,3 +339,38 @@ function addCommas(nStr) {
     }
     return x1 + x2;
 }
+
+function multi_bar_chart(data,chart_id){
+    datum=[]
+    for(text in data){
+	var tmp=[]
+	for (value in data[text]){
+	    tmp.push({"x":value,"y":data[text][value]})
+	}
+	datum.push({
+	    "key":text,
+	    "values":tmp
+	})
+    }
+    nv.addGraph(function() {
+	var chart = nv.models.multiBarChart()
+	    .x(function(d) { return d.x })
+	    .y(function(d) { return d.y })
+	    .stacked(true)
+	    .showControls(false)
+	
+//	chart.xAxis
+  //          .tickFormat(d3.format(',f'));
+	
+	chart.yAxis
+            .tickFormat(d3.format(',.1f'));
+	
+	d3.select('#'+chart_id)
+            .datum(datum)
+	    .transition().duration(500).call(chart);
+	
+	nv.utils.windowResize(chart.update);
+	
+    return chart;
+    });
+}
