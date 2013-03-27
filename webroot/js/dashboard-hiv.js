@@ -179,6 +179,49 @@
 				eligible_no_art_time=extractTimeData(jdata,"eligible_no_art",group="location")
 				eligible_no_art_percent_time=scale(eligible_no_art_time,eligible_time,1,2)
 
+	    //Charts for Follow-up 
+	    //Timeline for lost to follow-up
+	    
+	    //timeline_nv(exit_care_time,"chart_id",'Date','Patients');
+	    
+	    //Pie chart Followed UP
+	    followed_up=jdata[latest_date]["followed_up"]
+
+	    followed_up_age_gender={"Male < 14":0,"Female < 14":0,"Male > 14":0,"Female > 14":0}
+
+	    for(loc in followed_up){
+		followed_up_age_gender["Male < 14"]+=followed_up[loc][0]
+		followed_up_age_gender["Female < 14"]+=followed_up[loc][1]
+		followed_up_age_gender["Male > 14"]+=followed_up[loc][2]
+		followed_up_age_gender["Female > 14"]+=followed_up[loc][3]
+	    }
+	    //pie_chart(followed_up_age_gender,"chart_id");
+
+	    //Reason lost to follow-up pie chart
+	    reason_lost=extractTimeData(jdata,"reason_to_follow_up",group="text")[latest_date_d.getTime()]
+	    delete reason_lost["Missing"]
+	    //pie_chart(reason_lost,"chart_id");
+	    
+	    //Willing to Return timline
+
+	    willing_to_return_time={}
+	    for(k in jdata){
+		d = new Date(k);
+		willing_to_return_time[d.getTime()]=jdata[k]["willing_to_return"]
+	    }
+	    willing_to_return_age_gender={}
+	    for(time in willing_to_return_time){
+		var t={"Male < 14":0,"Female < 14":0,"Male > 14":0,"Female > 14":0}
+		for(loc in willing_to_return_time[time]){
+		    t["Male < 14"]+=willing_to_return_time[time][loc][0]
+		    t["Female < 14"]+=willing_to_return_time[time][loc][1]
+		    t["Male > 14"]+=willing_to_return_time[time][loc][2]
+		    t["Female > 14"]+=willing_to_return_time[time][loc][3]
+		}
+		willing_to_return_age_gender[time]=t
+	    }
+
+	    //timeline_nv(willing_to_return_age_gender,"chart_id",'Date','Patients');
 				// Timeline chart
 				scaling=total_time_data(enrolled_time,1) // Get scaling for line chart
 				
@@ -186,10 +229,9 @@
 				// Only render the chart when the tab is activated
 				$('a[href="#overview"]').on('show', function () {
 					// Enrollment timeline chart
-				        
 					timeline_nv(enrolled_time,"overview_timeline_chart",'Date','Patients');
 					// Patient source pie chart
-					pie_chart(ps[latest_date_d.getTime()],"overview_patient_source_chart");
+					pie_chart(ps[latest_date_d.getTime()],"overview_patient_source_chart")
 					// Age & gender pie chart
 					pie_chart(age_gender,"overview_age_gender_chart");
 				});
