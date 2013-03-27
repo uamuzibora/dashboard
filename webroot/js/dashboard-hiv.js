@@ -117,53 +117,51 @@
 				$('#lastDate').html(latest_date_d.getDate()+'/'+latest_date_d.getMonth()+'/'+latest_date_d.getFullYear());
 
 				// *** CHARTS ***
-	    //Age and gender Chart
-	    current_enrolled=jdata[latest_date]["enrolled"]
-	    
-	    age_gender={"Male < 14":0,"Female < 14":0,"Male > 14":0,"Female > 14":0}
-	    for(loc in current_enrolled){
-		age_gender["Male < 14"]+=current_enrolled[loc][0]
-		age_gender["Female < 14"]+=current_enrolled[loc][1]
-		age_gender["Male > 14"]+=current_enrolled[loc][2]
-		age_gender["Female > 14"]+=current_enrolled[loc][3]
-	    }
-	    
-	    //First CD4
-	    cd4=jdata[latest_date]["first_cd4"]
-	    cd4_age_gender={"<350":{"Male < 14":0,"Female < 14":0,"Male > 14":0,"Female > 14":0},">350":{"Male < 14":0,"Female < 14":0,"Male > 14":0,"Female > 14":0}}
-	   
-	    for(key in cd4){
-		if(key!="Missing"){
-		    for(loc in current_enrolled[key]){
-			cd4_age_gender[key]["Male < 14"]+=current_enrolled[key][loc][0]
-			cd4_age_gender[key]["Female < 14"]+=current_enrolled[key][loc][1]
-			cd4_age_gender[key]["Male > 14"]+=current_enrolled[key][loc][2]
-			cd4_age_gender[key]["Female > 14"]+=current_enrolled[key][loc][3]
-		    }
-		}
-	    }
-	    //multi_bar_chart(cd4_age_gender,"chart_id")
-	    //First WHO Stage
-	    who=jdata[latest_date]["first_who"]
-	    first_who_age_gender={}
-	    for (key in who){
-		if(key!="Missing" && key!="WHO STAGE MISSING"){
-		    first_who_age_gender[key]={"Male < 14":0,"Female < 14":0,"Male > 14":0,"Female > 14":0}
-		}
-	    }
-	   
-	    for(key in who){
-		if(key!="Missing" && key!="WHO STAGE MISSING"){
-		    for(loc in who[key]){
-			first_who_age_gender[key]["Male < 14"]+=who[key][loc][0]
-			first_who_age_gender[key]["Female < 14"]+=who[key][loc][1]
-			first_who_age_gender[key]["Male > 14"]+=who[key][loc][2]
-			first_who_age_gender[key]["Female > 14"]+=who[key][loc][3]
-		    }
-		}
-	    }
-//	    multi_bar_chart(first_who_age_gender,"chart_id")
-	    
+				
+				//Age and gender Chart
+				current_enrolled=jdata[latest_date]["enrolled"]
+				age_gender={"Male < 14":0,"Female < 14":0,"Male > 14":0,"Female > 14":0}
+				
+				for(loc in current_enrolled){
+					age_gender["Male < 14"]+=current_enrolled[loc][0]
+					age_gender["Female < 14"]+=current_enrolled[loc][1]
+					age_gender["Male > 14"]+=current_enrolled[loc][2]
+					age_gender["Female > 14"]+=current_enrolled[loc][3]
+				}
+
+				//First CD4
+				cd4=jdata[latest_date]["first_cd4"]
+				cd4_age_gender={"<350":{"Male < 14":0,"Female < 14":0,"Male > 14":0,"Female > 14":0},">350":{"Male < 14":0,"Female < 14":0,"Male > 14":0,"Female > 14":0}}
+
+				for(key in cd4){
+					if(key!="Missing"){
+						for(loc in cd4[key]){
+							cd4_age_gender[key]["Male < 14"]+=cd4[key][loc][0]
+							cd4_age_gender[key]["Female < 14"]+=cd4[key][loc][1]
+							cd4_age_gender[key]["Male > 14"]+=cd4[key][loc][2]
+							cd4_age_gender[key]["Female > 14"]+=cd4[key][loc][3]
+						}
+					}
+				}
+
+				//First WHO Stage
+				who=jdata[latest_date]["first_who"]
+				first_who_age_gender={}
+				for (key in who){
+					if(key!="Missing" && key!="WHO STAGE MISSING"){
+						first_who_age_gender[key]={"Male < 14":0,"Female < 14":0,"Male > 14":0,"Female > 14":0}
+					}
+				}
+				for(key in who){
+					if(key!="Missing" && key!="WHO STAGE MISSING"){
+						for(loc in who[key]){
+							first_who_age_gender[key]["Male < 14"]+=who[key][loc][0]
+							first_who_age_gender[key]["Female < 14"]+=who[key][loc][1]
+							first_who_age_gender[key]["Male > 14"]+=who[key][loc][2]
+							first_who_age_gender[key]["Female > 14"]+=who[key][loc][3]
+						}
+					}
+				}
 				
 				// Timeline chart
 				scaling=total_time_data(enrolled_time,1) // Get scaling for line chart
