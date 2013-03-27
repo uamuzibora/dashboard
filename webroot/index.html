@@ -1,480 +1,232 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>UB Dashboard</title>
-	<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
-	<link type="text/css" rel="stylesheet" href="css/nv.d3.css">
-	<style>
-	  #enrolled_chart {
-	  display: inline-block;
-	  font-family: Arial, Helvetica, sans-serif;
-	  }
-	  #chart {
-	  float: left;
-	  }
-	  #legend {
-	  float: left;
-	  margin-left: 15px;
-	  }
-	  #offset_form {
-	  float: left;
-	  margin: 2em 0 0 15px;
-	  font-size: 13px;
-	  }
-	  #y_axis {
-	  float: left;
-	  width: 40px;
-	  }
-	</style>
-
+	<title>Uamuzi Bora &middot; Dashboard</title>
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<link href="css/bootstrap-responsive.min.css" rel="stylesheet">
+	<link href="css/nv.d3.css" rel="stylesheet" >
+	<link href="css/custom.css" rel="stylesheet">
+	<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+	<!--[if lt IE 9]>
+		<script src="js/html5shiv.js"></script>
+	<![endif]-->
 </head>
 <body>
+	<div class="navbar-wrapper">
+		<!-- Wrap the .navbar in .container to center it within the absolutely positioned parent. -->
+		<div class="container">
+			<div class="navbar navbar-inverse">
+				<div class="navbar-inner">
+					<!-- Responsive Navbar Part 1: Button for triggering responsive navbar (not covered in tutorial). Include responsive CSS to utilize. -->
+					<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="brand" href="#"><img src="img/logox2.png" class="logo-image" alt=""></a>	
+						<!-- Responsive Navbar Part 2: Place all navbar contents you want collapsed withing .navbar-collapse.collapse. -->
+					<div class="nav-collapse collapse">
+						<ul class="nav">
+							<li><a href="/">Home</a></li>
+							<li><a href="#about">About</a></li>
+							<li><a href="#contact">Contact</a></li>
+							<li class="active"><a href="/dashboard">Dashboard</a></li>
+						</ul>
+					</div><!--/.nav-collapse -->
+				</div><!-- /.navbar-inner -->
+			</div><!-- /.navbar -->
+		</div> <!-- /.container -->
+	</div><!-- /.navbar-wrapper -->
+
 	<!-- Le container -->
-	<div class="container-fluid">
-		<!-- Topbar -->
-		<div class="navbar">
-			<div class="navbar-inner">
-			    <a class="brand" href="#">Uamuzi Bora Dashboard</a>
-			</div>
-		</div>
-		<!-- End Topbar -->
-		<!-- Content -->
-		<div class="row-fluid">
-			<!-- Sidebar -->
-			<div class="span3">
-				<ul class="nav nav-list" id="tablist">
-					<li class="active"><a href="#enrolled" data-toggle="pill">Patients Enrolled</a></li>
-					<li><a href="#patient_source" data-toggle="pill">Patients Source</a></li>
-					<li><a href="#eligibility_for_art" data-toggle="pill">Eligibility for ART, but not on ART</a></li>
-					<li><a href="#who_on_art" data-toggle="pill">On ART</a></li>
-					<li><a href="#exciting_care" data-toggle="pill">Exiting Care</a></li>
-					<li><a href="#followed_up" data-toggle="pill">Number Of People Followed-Up</a></li>
-					<li><a href="#follow_up" data-toggle="pill">Reason For beeing lost to follow-up</a></li>
-					<li><a href="#willing_to_return" data-toggle="pill">Willing to Return</a></li>
-					<li><a href="#missing_data" data-toggle="pill">Missing Data</a></li>
+	<div class="container">
+		<div class="row">
+			<div class="span12">
+				<ul class="nav nav-tabs" id="tablist">
+					<li class="active">
+						<a href="#home" data-toggle="tab">Home</a>
+					</li>
+					<li>
+						<a href="#overview" data-toggle="tab">Overview</a>
+					</li>
+					<li>
+						<a href="#data" data-toggle="tab">Data</a>
+					</li>
+					<li>
+						<a href="#clinical" data-toggle="tab">Clinical</a>
+					</li>
+					<li>
+						<a href="#followup" data-toggle="tab">Follow Up</a>
+					</li>
 				</ul>
 			</div>
-			<!-- End Sidebar -->
-			<!-- Data pane  -->
-			<div class="span9 tab-content">
-				<div class="tab-pane active" id="enrolled"></div>
-				<div class="tab-pane" id="patient_source"></div>
-				<div class="tab-pane" id="eligibility_for_art"></div>
-				<div class="tab-pane" id="who_on_art"></div>
-				<div class="tab-pane" id="exciting_care"></div>
-				<div class="tab-pane" id="followed_up"></div>
-				<div class="tab-pane" id="follow_up"></div>
-				<div class="tab-pane" id="willing_to_return"></div>
-				<div class="tab-pane" id="missing_data"></div>
+		</div>
+		<div class="row">
+			<div class="span12 tab-content">
+					<div class="tab-pane active" id="home">
+						<div class="page-header">
+							<h1>Programme Indicators</h1>
+						</div>
+						<div class="row dashnum">
+							<div class="span3 offset1 well well-small">
+								<h3>Enrolled Patients</h3>
+								<div id="enrolledPatients"></div>
+								<div id="enrolledPatientsPercent"></div>
+								<p class="small muted">Total patients enrolled</p>
+							</div>
+							<div class="span3 well well-small">
+								<h3>On ART</h3>
+								<div id="onArt"></div>
+								<div id="onArtPercent"></div>
+								<p class="small muted">Patients receiving ART</p>
+							</div>
+							<div class="span3 well well-small">
+								<h3>Eligible Not On ART</h3>
+								<div id="eligibleNotOnArt"></div>
+								<div id="eligibleNotOnArtPercent"></div>
+								<p class="small muted">Patients eligible but not receiving ART</p>
+							</div>
+						</div>
+						<div class="row dashnum">
+							<div class="span3 offset1 well well-small">
+								<h3>Lost To Follow Up</h3>
+								<div id="lostToFollowup"></div>
+								<div id="lostToFollowupPercent"></div>
+								<p class="small muted">Patients who are lost to follow up</p>
+							</div>
+							<div class="span3 well well-small">
+								<h3>Followed Up</h3>
+								<div id="lostPatientsFollowedUp"></div>
+								<p class="small muted">Patients who have been contacted or traced having been previously lost to follow up</p>
+							</div>
+							<div class="span3 well well-small">
+								<h3>Complete Records</h3>
+								<div id="completedRecords"></div>
+								<div id="completedRecordsPercent"></div>
+								<p class="small muted">Records with all four core parameters</p>
+							</div>
+						</div>
+						<div class="row dashnum">
+							
+						</div>
+						<div class="row">
+							<div class="span12">
+								<p class="small muted">Last updated on <span id="lastDate"></span>. Percentage changes are calculated from 5th October 2012. </p>
+							</div>
+						</div>
+					</div>
+					<div class="tab-pane" id="overview">
+						<div class="row">
+							<div class="span12">
+								<h2 class="chart-header">Enrolled patients over time</h2>
+								<div id="overview_timeline_chart" class="overview_timeline_chart chart">
+									<svg></svg>
+								</div>
+							</div>
+						</div>
+						<hr>
+						<div class="row">
+							<div class="span6">
+								<h2 class="chart-header">Patient source</h2>
+									<svg id="overview_patient_source_chart" class="pie_chart chart"></svg>
+							</div>
+							<div class="span6">
+								<h2 class="chart-header">Age &amp; gender</h2>
+									<svg id="overview_age_gender_chart" class="pie_chart chart"></svg>
+							</div>
+						</div>
+					</div>
+					<div class="tab-pane" id="data">
+						<div class="row">
+							<div class="span12">
+								<h2 class="chart-header">Missing data over time</h2>
+								<div id="data_missing_chart" class="data_missing_chart chart">
+									<svg></svg>
+								</div>
+							</div>
+						</div>
+						<hr>
+						<div class="row">
+							<div class="span12">
+								<h2 class="chart-header">Percentage change in missing core parameters</h2>
+								<div id="data_missing_parameters_chart" class="data_missing_chart chart">
+									<svg></svg>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="tab-pane" id="clinical">
+						<div class="row">
+							<div class="span12">
+								<h2 class="chart-header">Patients on ART over time</h2>
+								<div id="clinical_on_art_by_who_stage_timeline_chart" class="data_missing_chart chart">
+									<svg></svg>
+								</div>
+							</div>
+						</div>
+						<hr>
+						<div class="row">
+							<div class="span12">
+								<h2 class="chart-header">Eligible patients not receiving ART over time</h2>
+								<div id="clinical_eligible_not_on_art_timeline_chart" class="data_missing_chart chart">
+									<svg></svg>
+								</div>
+							</div>
+						</div>
+						<hr>
+						<div class="row">
+							<div class="span6">
+								<h2 class="chart-header">Initial WHO stage</h2>
+									<svg id="clinical_initial_who_multibar_chart" class="bar-chart chart"></svg>
+							</div>
+							<div class="span6">
+								<h2 class="chart-header">Initial CD4 count</h2>
+									<svg id="clinical_initial_cd4_multibar_chart" class="bar-chart chart"></svg>
+							</div>
+						</div>
+					</div>
+					<div class="tab-pane" id="followup">
+						<div class="row">
+							<div class="span12">
+								<h2 class="chart-header">Patients exited care over time</h2>
+								<div id="followup_exit_timeline_chart" class="data_missing_chart chart">
+									<svg></svg>
+								</div>
+							</div>
+						</div>
+						<hr>
+						<div class="row">
+							<div class="span12">
+								<h2 class="chart-header">Patiets lost to follow up willing to return over time</h2>
+								<div id="followup_return_timeline_chart" class="data_missing_chart chart">
+									<svg></svg>
+								</div>
+							</div>
+						</div>
+						<hr>
+						<div class="row">
+							<div class="span6">
+								<h2 class="chart-header">Patients followed up</h2>
+									<svg id="followup_age_gender_chart" class="pie-chart chart"></svg>
+							</div>
+							<div class="span6">
+								<h2 class="chart-header">Reasons lost to follow up</h2>
+									<svg id="followup_reason_lost_chart" class="pie-chart chart"></svg>
+							</div>
+						</div>
+					</div>
 			</div>
-			<!-- End Data pane -->
 		</div>
-		<style>
-		  
-		  #chart_nv svg {
-		  height: 400px;
-		  }
-		  #chart_pie svg {
-		  height: 400px;
-		  width: 800px;
-		  }
-		  #line_chart svg {
-		  height: 400px;
-		  }
-		  #bar_chart {
-		  margin: 10px;
-		  min-width: 100px;
-		  min-height: 100px;
-
-		  }
-                  #bar_chart svg {
-		  height: 500px;
-		  }
-
-		</style>
-		
-		
-		<div id="chart_nv">
-		  <svg></svg>
-		</div>
-		<div id="chart_pie">
-		  <svg></svg>
-		</div>
-		<div id="line_chart">
-		  <svg></svg>
-		</div>
-		<div id="bar_chart">
-		  <svg></svg>
-		</div>
-
-
 	</div>
+	
 	<!-- Le Javascript at the bottom for speediness -->
 	<script src="js/jquery.min.js"></script>
 	<script src="js/bootstrap.js"></script>
 	<script src="js/d3.v2.min.js"></script>
 	<script src="js/nv.d3.min.js"></script>
 	<script src="js/tooltip.js"></script>
-
-	<script>
-	function table(data,location){
-	     html='<table class="table table-bordered table-hover"> \
-	          <tr><td></td> \
-	          <th colspan="2">Childern(0-14y)</th><th colspan="2"> Adults</th> \
-	          <th colspan="2">Totals</th><th> Grand Totals</th></tr> \
-	          <tr><td></td><th>M</th><th>F</th><th>M</th><th>F</th><th>M</th><th>F</th><td></td>';
-	     var sums=[0,0,0,0,0,0,0]
-	     keys=Object.keys(data);
-	     for (var k=0;k<keys.length;k++){
-	         key=keys.sort()[k]
-	         html+='<tr><td>'+key+'</td>'
-	         var sum_m=0;
-	         var sum_f=0;
-	         for(var j=0;j<4;j++){
-		     var sum=0;
-             
-	             if(location){
-		     for(var loc in data[key]){
-	                 sum+=data[key][loc][j]
-	                 }
-	             }else{
-	             sum=data[key][j];
-	             }
-	             if(j==0 ||j==2){sum_m+=sum}
-	             else {sum_f+=sum}
-	             sums[j]+=sum;
-             
-	             html+='<td>'+sum+'</td>'
-	         }
-	 
-	         sums[4]+=sum_m
-	         sums[5]+=sum_f
-		 sums[6]+=(sum_m+sum_f)
-	         html+='<td>'+sum_m+'</td><td>'+sum_f+'</td><td>'+(sum_m+sum_f)+'</tr>'
-	     }
-	     if(keys.length>1){
-	     html+="<tr><td>Sub-total</td>"
-	     for(var i=0;i<sums.length;i++){
-	         html+='<td>'+sums[i]+'</td>'
-	     }
-	     }
-	     return html+'</tr></table>';
-	    };
-	$(document).ready(function(){
-
-	    $.post("http://localhost/backend",
-	    {
-	      data:"all",request_type:"dashboard"
-	    },
-	    function(data,status){
-	      jdata=jQuery.parseJSON(data);
-	      var keys=Object.keys(jdata);
-	      keys.sort();
-	      keys.reverse()
-	      latest_date=keys[0]
-              latest_date_d=new Date(latest_date);
-	      $("#text").html(keys);
-              var enrolled_time=extractTimeData(jdata,"enrolled",group="location")
-              var ps=extractTimeData(jdata,"patient_source",group="text")
-              pie_chart(ps[latest_date_d.getTime()],"chart_pie")
-	      //timeline(enrolled_time,"enrolled_chart");
-	      //get scaling for line chart
-              scaling=total_time_data(enrolled_time,1)
-              timeline_nv(enrolled_time,"chart_nv");
-	      var missing_data=extractTimeData(jdata,"missing",group="text")
-              missing_data_scaled=scale(missing_data,scaling,100,2)
-              missing_percent_change=percent_change(missing_data_scaled,1,"individual");
-              horizontal_bar_chart(missing_percent_change,"bar_chart")
-              line_chart(missing_data,"line_chart",scaling);
-              $("#enrolled").html(table(jdata[latest_date]["enrolled"],false));
-	      $("#patient_source").html(table(jdata[latest_date]["patient_source"],true));
-	      $("#eligibility_for_art").html(table(jdata[latest_date]["eligible_no_art"],false));
-	      $("#who_on_art").html(table(jdata[latest_date]["on_art_who"],true));
-	      $("#exciting_care").html(table(jdata[latest_date]["inactive_reason"],true));
-	      $("#follow_up").html(table(jdata[latest_date]["reason_to_follow_up"],true));
-	      $("#followed_up").html(table(jdata[latest_date]["followed_up"],false));      
-	      $("#willing_to_return").html(table(jdata[latest_date]["willing_to_return"],false));
-	      $("#missing_data").html(table(jdata[latest_date]["missing"],true));
-
-	    });
-  
-	});
-	  $(function () {
-	    $('#tablist a:first').tab('show');
-	  })
-        function scale(data,scaling,scale,level){
-            return_data={}
-            for(key in data){
-	    if(level==1){
-	      return_data[key]=data[key]/scaling[key]*scale
-            }if(level==2){
-              return_data[key]={}
-              for(key2 in data[key]){
-	          return_data[key][key2]=data[key][key2]/scaling[key]*scale
-              }
-            }
-            }
-            return return_data
-        }
-        function percent_change(data,level,which){
-            if(which=="total"){
-            data=total_time_data(data,level)
-            var keys=Object.keys(data)
-            return (data[keys[keys.length-1]]-data[keys[0]])/data[keys[0]]*100
-           }if(which=="individual"){
-            var keys=Object.keys(data)
-            return_data={}
-            for(key in data[keys[0]]){
-	        return_data[key]=(data[keys[keys.length-1]][key]-data[keys[0]][key])/data[keys[0]][key]*100
-            }
-            return return_data
-          }
-        }
-        function extractTimeData(data,key,group){
-           var keys=Object.keys(data);
-	   keys.sort();
-           var timedata={}
-           if(!group){
-           for (var i=0;i<keys.length;i++){
-                 k=keys[i];
-
-                 var date = new Date(k); 
-                 var sum=0;
-	         for(var j=0;j<4;j++){
-		     for(var loc in data[k][key]){
-	                 sum+=data[k][key][loc][j];
-
-	                 }
-                 
-	         }
-
-                 timedata[date.getTime()]=sum
-          }}
-          if(group=="location"){
-	     for (var i=0;i<keys.length;i++){
-                 k=keys[i];
-
-                 var date = new Date(k); 
-	         timedata[date.getTime()]={}
-	         for(var loc in data[k][key]){
-                    var sum=0; 
-                    for(var j=0;j<4;j++){
-	                  sum+=data[k][key][loc][j];
-	             }
-                     timedata[date.getTime()][loc]=sum;
-                }
-          }}
-          if(group=="text"){
-	  for (var i=0;i<keys.length;i++){
-                 k=keys[i];
-                 var date = new Date(k); 
-	         timedata[date.getTime()]={}
-                 for(var t in data[k][key]){
-
-	             var sum=0; 
-	                 for(var loc in data[k][key][t]){
-                            for(var j=0;j<4;j++){
-	                       sum+=data[k][key][t][loc][j];
-	                    }
-                    timedata[date.getTime()][t]=sum;
-                }
-
-
-          }
-          }
-          return timedata
-
-        }
-        function total_time_data(data,level){
-	      ret_data={}
-              for(k in data){
-                  sum=0;
-                  for(l in data[k]){
-                  if (level==2){
-                     for(j in data[k][j]){
-                       sum+=data[k][l];
-                     }
-                  }else{
-                       sum+=data[k][l];
-                  }
-                  }
-	       ret_data[k]=sum
-              }
-             return ret_data
-        }
-        function line_chart(data,chart_id,scaling){
-
-           var timedata_t={}
-           keys=Object.keys(data)
-           locations=Object.keys(data[keys[keys.length-1]]);
-
-           max=0;
-           max_number=0;
-           for(var i=0;i<keys.length;i++){
-               locs=Object.keys(data[keys[i]]);
-               if (locs.length>max){
-                   max=locs.length
-                   max_number=i
-               }               
-           }
-           for(loc in data[keys[max_number]]){
-               timedata_t[loc]=[]
-           }
-           
-	   for(var i=0;i<keys.length;i++){
-               for(loc in data[keys[i]]){
-                     ar=data[keys[i]][loc]
-                     if(scaling){
-                     scale=scaling[keys[i]]/100.0
-                     }else{
-                     scale=1
-                     }                
-   
-	             timedata_t[loc].push([parseInt(keys[i]),data[keys[i]][loc]/scale]);
-                }
-	   }
-          var timedata=[];
-  
-         for(loc in timedata_t){
-	     timedata.push({"key":loc,"values":timedata_t[loc]})
-          }
-             nv.addGraph(function() {
-              var chart_line = nv.models.lineWithFocusChart()
-                 .x(function(d) { return d[0] })
-                 .y(function(d) { return d[1] });
-              chart_line.xAxis
-                .showMaxMin(false)
-                .tickFormat(function(d) { return d3.time.format('%x')(new Date(d)) });
-             chart_line.x2Axis
-		.showMaxMin(false)
-                .tickFormat(function(d) { return d3.time.format('%x')(new Date(d)) });
-
-             chart_line.yAxis
-               .tickFormat(d3.format(',.2f'));
-             chart_line.y2Axis
-              .tickFormat(d3.format(',.2f'));
-
-	    d3.select('#'+chart_id+' svg')
-            .datum(timedata)
-            .transition().duration(500)
-            .call(chart_line);
-
-            nv.utils.windowResize(chart_line.update);
-
-           return chart_line;
-          });
-
-     }
-        function pie_chart(data,chart_id){
-             datum=[]
-             for(text in data){
-	          datum.push({"label":text,"value":parseInt(data[text])})
-             }
-             datum=[{"key":"Stuff","values":datum}]
-             nv.addGraph(function() {
-                 var chart = nv.models.pieChart()
-                .x(function(d) { return d.label })
-                .y(function(d) { return d.value })
-                .showLabels(false);
-
-            d3.select("#"+chart_id+" svg")
-                 .datum(datum)
-                 .transition().duration(1200)
-                 .call(chart);
-
-            return chart;
-            });
-
-
-
-        }
-
-        function timeline_nv(data,chart_id){
-           timedata_t={}
-           keys=Object.keys(data)
-           locations=Object.keys(data[keys[keys.length-1]]);
-
-	   max=0;
-           max_number=0;
-           for(var i=0;i<keys.length;i++){
-               locs=Object.keys(data[keys[i]]);
-               if (locs.length>max){
-                   max=locs.length
-                   max_number=i
-               }               
-           }
-           for(loc in data[keys[max_number]]){
-               timedata_t[loc]=[]
-           }
-	   for(var i=0;i<keys.length;i++){
-                for(loc in data[keys[max_number]]){
-                    if(loc in data[keys[i]]){
-	             timedata_t[loc].push([parseInt(keys[i]),data[keys[i]][loc]]);
-                    }else{
-      	             timedata_t[loc].push([parseInt(keys[i]),0]);
-                    }
-                }
-	   }
-          var timedata=[];
-          for(loc in timedata_t){
-	     timedata.push({"key":loc,"values":timedata_t[loc]})
-          }
-  	  nv.addGraph(function() {
-             var chart = nv.models.stackedAreaChart()
-             .x(function(d) { return d[0] })
-             .y(function(d) { return d[1] })
-             .clipEdge(true);
-
-             chart.xAxis
-	          .showMaxMin(false)
-                  .tickFormat(function(d) { return d3.time.format('%x')(new Date(d)) });
-
-             chart.yAxis
-             .tickFormat(d3.format(',.2f'));
-
-             d3.select("#"+chart_id+' svg')
-             .datum(timedata)
-             .transition().duration(500).call(chart);
-
-             nv.utils.windowResize(chart.update);
-
-        return chart;
-});
-
-
-        }
-
-        function horizontal_bar_chart(data,chart_id){
-             var datum=[{key:"Missing data",color: '#1f77b4',values:[]}]
-	     for(key in data){
-                 datum[0]["values"].push({"label":key,"value":data[key]})
-             }
-	     var chart;
-             nv.addGraph(function() {
-             chart = nv.models.multiBarHorizontalChart()
-                .x(function(d) { return d.label })
-                .y(function(d) { return d.value })
-                .margin({top: 30, right: 20, bottom: 50, left: 175})
-                .showValues(true)
-                .tooltips(false)
-                .showControls(false);
-
-            chart.yAxis
-                .tickFormat(d3.format(',.2f'));
-
-            d3.select('#'+chart_id+' svg')
-                .datum(datum)
-                .transition().duration(500)
-                .call(chart);
-
-            nv.utils.windowResize(chart.update);
-
-
-
-            return chart;
-           });
-        }
-	</script>
-	<!-- End Javascript -->
+	<script src="js/ub_chart.js"></script>
+	<script src="js/data_dynamic.js"></script>
+	<script src="js/dashboard-hiv.js"></script>
 </body>
 </html>
