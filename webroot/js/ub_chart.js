@@ -149,7 +149,7 @@ function total_time_data(data,level){
     return ret_data
 }
 
-function line_chart(data,chart_id,scaling){
+function line_chart(data,chart_id,scaling,xAxisLabel,yAxisLabel){
     var timedata_t = {}
     keys = Object.keys(data)
     locations = Object.keys(data[keys[keys.length - 1]]);
@@ -169,7 +169,7 @@ function line_chart(data,chart_id,scaling){
 	for (loc in data[keys[i]]){
 	    ar = data[keys[i]][loc]
 	    if (scaling){
-		scale = scaling[keys[i]] / 100.0
+		scale = scaling[keys[i]]
 	    } else {
 		scale = 1
 	    }
@@ -181,24 +181,21 @@ function line_chart(data,chart_id,scaling){
 	timedata.push({"key":loc,"values":timedata_t[loc]})
     }
     nv.addGraph(function() {
-	var chart_line = nv.models.lineWithFocusChart()
+	var chart_line = nv.models.lineChart()
 	    .x(function(d) { return d[0] })
 	    .y(function(d) { return d[1] });
 	
 	chart_line.xAxis
 	    .showMaxMin(false)
-	    .tickFormat(function(d) { return d3.time.format('%x')(new Date(d)) });
-	
-	chart_line.x2Axis
-	    .showMaxMin(false)
-	    .tickFormat(function(d) { return d3.time.format('%x')(new Date(d)) });
-	
+	    .axisLabel(xAxisLabel)
+	    .tickFormat(function(d) { return d3.time.format('%e %b %Y')(new Date(d)) });
+
 	chart_line.yAxis
-	    .tickFormat(d3.format(',.2f'));
+	    .axisLabel(yAxisLabel)
+	    .showMaxMin(false)
+	    .tickFormat(d3.format('p'));
 	
-		chart_line.y2Axis
-	    .tickFormat(d3.format(',.2f'));
-	
+
 	d3.select('#'+chart_id+' svg')
 	    .datum(timedata)
 	    .transition().duration(500)
@@ -237,7 +234,7 @@ function pie_chart(data,chart_id){
     });
 }
 
-function timeline_nv(data,chart_id){
+function timeline_nv(data,chart_id,xAxisLabel,yAxisLabel){
     timedata_t = {}
     keys = Object.keys(data)
     locations = Object.keys(data[keys[keys.length - 1]]);
@@ -271,14 +268,17 @@ function timeline_nv(data,chart_id){
 	var chart = nv.models.stackedAreaChart()
 	    .x(function(d) { return d[0] })
 	    .y(function(d) { return d[1] })
-	    .clipEdge(true);
+	    .clipEdge(true)
+	    .showControls(false);
 	
 	chart.xAxis
 	    .showMaxMin(false)
-	    .tickFormat(function(d) { return d3.time.format('%x')(new Date(d)) });
+	    .axisLabel(xAxisLabel)
+	    .tickFormat(function(d) { return d3.time.format('%e %b %Y')(new Date(d)) });
 	
 	chart.yAxis
-	    .tickFormat(d3.format(',.2f'));
+	    .axisLabel(yAxisLabel)
+	    .tickFormat(d3.format('n'));
 	
 	d3.select("#"+chart_id+' svg')
 	    .datum(timedata)
@@ -289,7 +289,7 @@ function timeline_nv(data,chart_id){
     });
 }
 
-function horizontal_bar_chart(data,chart_id){
+function horizontal_bar_chart(data,chart_id,xAxisLabel,yAxisLabel){
     var datum=[{
 	key:"Missing data",
 	color: '#1f77b4',
@@ -310,12 +310,17 @@ function horizontal_bar_chart(data,chart_id){
 		bottom: 50,
 		left: 175
 	    })
-	    .showValues(true)
-	    .tooltips(false)
+	    .showValues(false)
+	    .tooltips(true)
 	    .showControls(false);
 	
+
+	chart.xAxis
+	    .axisLabel(xAxisLabel)
+
 	chart.yAxis
-	    .tickFormat(d3.format(',.2f'));
+	    .axisLabel(yAxisLabel)
+	    .tickFormat(d3.format('p'));
 	
 	d3.select('#'+chart_id+' svg')
 	    .datum(datum)

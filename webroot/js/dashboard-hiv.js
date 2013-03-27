@@ -173,7 +173,7 @@
 				// Only render the chart when the tab is activated
 				$('a[href="#overview"]').on('show', function () {
 					// Enrollment timeline chart
-					timeline_nv(enrolled_time,"overview_timeline_chart");
+					timeline_nv(enrolled_time,"overview_timeline_chart",'Date','Patients');
 					// Patient source pie chart
 					pie_chart(ps[latest_date_d.getTime()],"overview_patient_source_chart");
 					// Age & gender pie chart
@@ -182,9 +182,9 @@
 				});
 				$('a[href="#data"]').on('show', function () {
 					// Missing data over time chart
-					line_chart(missing_data,"data_missing_chart",scaling);
+					line_chart(missing_data,"data_missing_chart",scaling,'Date','Incomplete Records');
 					// Missing core parameters chart
-					horizontal_bar_chart(missing_percent_change,"data_missing_parameters_chart")
+					horizontal_bar_chart(missing_percent_change,"data_missing_parameters_chart",'Percentage Change','Core Parameter')
 				});
 
 				// Missing data chart
