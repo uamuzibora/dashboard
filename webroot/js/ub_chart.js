@@ -187,8 +187,8 @@ function line_chart(data,chart_id,scaling,xAxisLabel,yAxisLabel){
 	
 	chart_line.xAxis
 	    .showMaxMin(false)
-	    .tickFormat(function(d) { return d3.time.format('%x')(new Date(d)) });
 	    .axisLabel(xAxisLabel)
+	    .tickFormat(function(d) { return d3.time.format('%e %b %Y')(new Date(d)) });
 
 	chart_line.yAxis
 	    .axisLabel(yAxisLabel)
@@ -271,8 +271,8 @@ function timeline_nv(data,chart_id,xAxisLabel,yAxisLabel){
 	
 	chart.xAxis
 	    .showMaxMin(false)
-	    .tickFormat(function(d) { return d3.time.format('%x')(new Date(d)) });
 	    .axisLabel(xAxisLabel)
+	    .tickFormat(function(d) { return d3.time.format('%e %b %Y')(new Date(d)) });
 	
 	chart.yAxis
 	    .tickFormat(d3.format(',.2f'));
