@@ -261,6 +261,7 @@ function pie_chart(data,chart_id){
 		.x(function(d) { return d.label })
 		.y(function(d) { return d.value })
 		.values(function(d) { return d })
+		.valueFormat(d3.format('n'))
 		.showLabels(false);
 
 	d3.select("#"+chart_id)
@@ -309,7 +310,8 @@ function timeline_nv(data,chart_id,xAxisLabel,yAxisLabel){
 	    .x(function(d) { return d[0] })
 	    .y(function(d) { return d[1] })
 	    .clipEdge(true)
-	    .showControls(false);
+	    .showControls(false)
+	    .color(d3.scale.category20().range());
 	
 	chart.xAxis
 	    .showMaxMin(false)
@@ -365,6 +367,10 @@ function percentage_timeline_nv(data,chart_id,xAxisLabel,yAxisLabel){
 	    .x(function(d) { return d[0] })
 	    .y(function(d) { return d[1] })
 	    .clipEdge(true)
+	    .tooltip(function(key, x, y, e, graph) {
+        return '<h3>' + key + '</h3>' +
+               '<p>' +  Math.round(parseFloat(y)) + '% on ' + x + '</p>'
+      })
 	    .showControls(false);
 	
 	chart.xAxis
@@ -411,6 +417,10 @@ function horizontal_bar_chart(data,chart_id,xAxisLabel,yAxisLabel){
 	    .tooltips(true)
 	    .showControls(false)
 	    .showLegend(false)
+	    .tooltip(function(key, x, y, e, graph) {
+        return '<h3>' + key + '</h3>' +
+               '<p>' +  Math.round(parseFloat(y)) + '% on ' + x + '</p>'
+      })
 	    .forceY([-1,1]);
 
 	chart.yAxis

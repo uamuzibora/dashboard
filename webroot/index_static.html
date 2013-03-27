@@ -12,6 +12,7 @@
 	<![endif]-->
 </head>
 <body>
+
 	<div class="navbar-wrapper">
 		<!-- Wrap the .navbar in .container to center it within the absolutely positioned parent. -->
 		<div class="container">
@@ -27,9 +28,7 @@
 						<!-- Responsive Navbar Part 2: Place all navbar contents you want collapsed withing .navbar-collapse.collapse. -->
 					<div class="nav-collapse collapse">
 						<ul class="nav">
-							<li><a href="/">Home</a></li>
-							<li><a href="#about">About</a></li>
-							<li><a href="#contact">Contact</a></li>
+							<li><a href="https://uamuzibora.org">Home</a></li>
 							<li class="active"><a href="/dashboard">Dashboard</a></li>
 						</ul>
 					</div><!--/.nav-collapse -->
@@ -37,7 +36,6 @@
 			</div><!-- /.navbar -->
 		</div> <!-- /.container -->
 	</div><!-- /.navbar-wrapper -->
-
 	<!-- Le container -->
 	<div class="container">
 		<div class="row">
@@ -106,19 +104,11 @@
 								<p class="small muted">Records with all four core parameters</p>
 							</div>
 						</div>
-						<div class="row dashnum">
-							
-						</div>
-						<div class="row">
-							<div class="span12">
-								<p class="small muted">Last updated on <span id="lastDate"></span>. Percentage changes are calculated from 5th October 2012. </p>
-							</div>
-						</div>
 					</div>
 					<div class="tab-pane" id="overview">
 						<div class="row">
 							<div class="span12">
-								<h2 class="chart-header">Enrolled patients over time</h2>
+								<h2 class="chart-header">Enrolled patients</h2>
 								<div id="overview_timeline_chart" class="overview_timeline_chart chart">
 									<svg></svg>
 								</div>
@@ -158,7 +148,7 @@
 					<div class="tab-pane" id="clinical">
 						<div class="row">
 							<div class="span12">
-								<h2 class="chart-header">Patients on ART over time</h2>
+								<h2 class="chart-header">Patients on antiretroviral therapy</h2>
 								<div id="clinical_on_art_by_who_stage_timeline_chart" class="data_missing_chart chart">
 									<svg></svg>
 								</div>
@@ -167,7 +157,7 @@
 						<hr>
 						<div class="row">
 							<div class="span12">
-								<h2 class="chart-header">Eligible patients not receiving ART over time</h2>
+								<h2 class="chart-header">Eligible patients not receiving antiretroviral therapy</h2>
 								<div id="clinical_eligible_not_on_art_timeline_chart" class="data_missing_chart chart">
 									<svg></svg>
 								</div>
@@ -188,7 +178,7 @@
 					<div class="tab-pane" id="followup">
 						<div class="row">
 							<div class="span12">
-								<h2 class="chart-header">Patients exited care over time</h2>
+								<h2 class="chart-header">Patients exited care</h2>
 								<div id="followup_exit_timeline_chart" class="data_missing_chart chart">
 									<svg></svg>
 								</div>
@@ -197,7 +187,7 @@
 						<hr>
 						<div class="row">
 							<div class="span12">
-								<h2 class="chart-header">Patiets lost to follow up willing to return over time</h2>
+								<h2 class="chart-header">Patiets lost to follow up &amp; willing to return</h2>
 								<div id="followup_return_timeline_chart" class="data_missing_chart chart">
 									<svg></svg>
 								</div>
@@ -218,7 +208,14 @@
 			</div>
 		</div>
 	</div>
-	
+	<footer>
+		<div class="container">
+			<hr class="featurette-divider">
+				<p class="small muted">Last updated on <span id="lastDate"></span>. Percentage changes are calculated from 5th October 2012. </p>
+				<p class="pull-right"><a href="#">Back to top</a></p>
+				<p>&copy; 2013 Uamuzi Bora &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
+		</div>
+	</footer>
 	<!-- Le Javascript at the bottom for speediness -->
 	<script src="js/jquery.min.js"></script>
 	<script src="js/bootstrap.js"></script>
