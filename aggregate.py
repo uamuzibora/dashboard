@@ -219,8 +219,9 @@ print "Finished getting data. ",len(data.keys())
 # Calculate Aggregates:
 
 age_limit=14
-t=datetime.datetime.now()
-aggregate={"enrolled":{},"patient_source":{},"eligible_no_art":{},"willing_to_return":{},"on_art_who":{},"inactive_reason":{},"reason_to_follow_up":{},"followed_up":{},"first_who":{},"first_cd4":{}, "timestamp": t, "missing":{}}
+#t=datetime.datetime.now()
+t=datetime.datetime(2013,3,26)
+aggregate={"enrolled":{},"patient_source":{},"eligible_no_art":{},"willing_to_return":{},"on_art_who":{},"inactive_reason":{},"reason_to_follow_up":{},"followed_up":{},"first_who":{},"first_cd4":{}, "timestamp": t,"eligible_for_art":{},"complete_records":{}, "missing":{}}
 
 for patient in data.keys():
     p=data[patient]
@@ -237,6 +238,10 @@ for patient in data.keys():
             insert(aggregate,'missing',location,group_number,text="First WHO Stage")
         if not p["cd4_count"]["First"]:
             insert(aggregate,'missing',location,group_number,text="First CD4 Count")
+        if p["hiv_positive_date"] and p["who_stage_f"]!="Missing" and p["cd4_count"]["First"] and ((p["eligible_for_art"] and p["art_eligible_date"]) or not p["eligible_for_art"]):
+            insert(aggregate,'complete_records',location,group_number)
+        if p["eligible_for_art"]:
+            insert(aggregate,'eligible_for_art',location,group_number)
         for field in data[patient].keys():
             # This is where we define what we want
             if field=="patient_source":
@@ -287,10 +292,10 @@ for entry in collection.find():
     if entry["timestamp"]>latest_date:
         latest_date=entry["timestamp"]
 
-if (aggregate["timestamp"]-latest_date).seconds>5*3600:# Have at least 12 hours between each update
-    collection.insert(aggregate)
-else:
-    print "already have a recent record"
+#if (aggregate["timestamp"]-latest_date).seconds>5*3600:# Have at least 12 hours between each update
+collection.insert(aggregate)
+#else:
+#    print "already have a recent record"
 
 # Performance review
 initial_raw=db.query_dict("select username,count(encounter_id) as number from encounter inner join users on encounter.creator=user_id where form_id=1 and encounter_datetime>date_sub(curdate(),interval 7 day) group by encounter.creator")
