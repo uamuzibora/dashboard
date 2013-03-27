@@ -410,6 +410,7 @@ function horizontal_bar_chart(data,chart_id,xAxisLabel,yAxisLabel){
 	    .showValues(false)
 	    .tooltips(true)
 	    .showControls(false)
+	    .showLegend(false)
 	    .forceY([-1,1]);
 
 	chart.yAxis
