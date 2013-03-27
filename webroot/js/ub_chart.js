@@ -181,24 +181,18 @@ function line_chart(data,chart_id,scaling){
 	timedata.push({"key":loc,"values":timedata_t[loc]})
     }
     nv.addGraph(function() {
-	var chart_line = nv.models.lineWithFocusChart()
+	var chart_line = nv.models.lineChart()
 	    .x(function(d) { return d[0] })
 	    .y(function(d) { return d[1] });
 	
 	chart_line.xAxis
 	    .showMaxMin(false)
 	    .tickFormat(function(d) { return d3.time.format('%x')(new Date(d)) });
-	
-	chart_line.x2Axis
-	    .showMaxMin(false)
-	    .tickFormat(function(d) { return d3.time.format('%x')(new Date(d)) });
-	
+
 	chart_line.yAxis
 	    .tickFormat(d3.format(',.2f'));
 	
-		chart_line.y2Axis
-	    .tickFormat(d3.format(',.2f'));
-	
+
 	d3.select('#'+chart_id+' svg')
 	    .datum(timedata)
 	    .transition().duration(500)
