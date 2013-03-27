@@ -165,7 +165,8 @@
 				
 				// Timeline chart
 				scaling=total_time_data(enrolled_time,1) // Get scaling for line chart
-				//timeline_nv(enrolled_time,"overview_timeline_chart");
+				
+
 				// Only render the chart when the tab is activated
 				$('a[href="#overview"]').on('show', function () {
 					// Enrollment timeline chart
@@ -174,7 +175,6 @@
 					pie_chart(ps[latest_date_d.getTime()],"overview_patient_source_chart");
 					// Age & gender pie chart
 					pie_chart(age_gender,"overview_age_gender_chart");
-
 				});
 				$('a[href="#data"]').on('show', function () {
 					// Missing data over time chart
@@ -182,7 +182,12 @@
 					// Missing core parameters chart
 					horizontal_bar_chart(missing_fractional_change,"data_missing_parameters_chart",'Parameter','Percentage Change')
 				});
-
+				$('a[href="#clinical"]').on('show', function () {
+					// Initial WHO stage timeline chart
+					multi_bar_chart(first_who_age_gender,"clinical_initial_who_multibar_chart");
+					console.log(cd4_age_gender);
+					multi_bar_chart(cd4_age_gender,"clinical_initial_cd4_multibar_chart");
+				});
 				// Missing data chart
 				var missing_data = extractTimeData(jdata,"missing",group="text")
 				missing_data_scaled = scale(missing_data,scaling,100,2)
