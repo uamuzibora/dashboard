@@ -1,7 +1,7 @@
 jdata=data();
 $(document).ready(function(){
 	 //   	jdata=data();
-    load_numbers()
+   // load_numbers()
 });
 function load_numbers(){
     var keys = Object.keys(jdata);
@@ -205,12 +205,16 @@ function load_numbers(){
     //Willing to Return timline
     
     willing_to_return_time={}
+    var dates=[]
     for(k in jdata){
 	d = new Date(k);
+	dates.push(d.getTime())
 	willing_to_return_time[d.getTime()]=jdata[k]["willing_to_return"]
     }
     willing_to_return_age_gender={}
-    for(time in willing_to_return_time){
+    dates.sort()
+    for(var i=0;i<dates.length;i++){
+	time=dates[i]
 	var t={"Male < 14":0,"Female < 14":0,"Male > 14":0,"Female > 14":0}
 	for(loc in willing_to_return_time[time]){
 	    t["Male < 14"]+=willing_to_return_time[time][loc][0]

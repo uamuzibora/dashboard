@@ -1,7 +1,7 @@
 
 function data(){
     jdata=[]
-    var request=$.post("http://localhost/backend",
+    var request=$.post("https://uamuzibora.org/dashboard_backend",
 	   {
 	       data:"all",request_type:"dashboard"
 	   },

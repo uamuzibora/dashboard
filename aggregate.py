@@ -219,8 +219,8 @@ print "Finished getting data. ",len(data.keys())
 # Calculate Aggregates:
 
 age_limit=14
-#t=datetime.datetime.now()
-t=datetime.datetime(2013,3,26)
+t=datetime.datetime.now()
+#t=datetime.datetime(2013,3,26)
 aggregate={"enrolled":{},"patient_source":{},"eligible_no_art":{},"willing_to_return":{},"on_art_who":{},"inactive_reason":{},"reason_to_follow_up":{},"followed_up":{},"first_who":{},"first_cd4":{}, "timestamp": t,"eligible_for_art":{},"complete_records":{}, "missing":{}}
 
 for patient in data.keys():
@@ -316,7 +316,7 @@ latest_date=datetime.datetime(1970,12,12)
 for entry in collection.find():
     if entry["timestamp"]>latest_date:
         latest_date=entry["timestamp"]
-if (aggregate["timestamp"]-latest_date).seconds>5*3600:# Have at least 12 hours between each update
-    collection.insert(aggregate)
-else:
-    print "already have a recent record"
+#if (aggregate["timestamp"]-latest_date).seconds>5*3600:# Have at least 12 hours between each update
+collection.insert(aggregate)
+#else:
+#    print "already have a recent record"
